@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+<div class="server_table">
+
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Plan to Migrate</th>
+    <th>App Names</th>
+  </tr>
+
+  {% for app in apps %}
+  <tr>
+
+
+    <td>{{ app.name }}</td>
+    <td>{{ app.description }}</td>
+    <td>{{ app.plan_to_migrate }}</td>
+    <td>{{ app.app_names }}</td>
+
+  </tr>
+  {% endfor %}
+
+</table>
+
+
+</div>
+
+
+{% endblock %}

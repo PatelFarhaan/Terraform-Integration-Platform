@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<div class="server_table">
+
+
+<table>
+  <tr>
+    <th>Configuration ID</th>
+    <th>Description</th>
+    <th>Last Modified Date</th>
+    <th>Name</th>
+    <th>Server Count</th>
+    <th>Time of Creation</th>
+  </tr>
+
+  {% for apps in aws_response %}
+  <tr>
+
+    {% for k,v in apps.items %}
+    <td>{{ v }}</td>
+    {% endfor %}
+
+  </tr>
+  {% endfor %}
+
+</table>
+
+
+</div>
+
+
+
+{% endblock %}

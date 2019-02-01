@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+
+
+<a href="{% url 'aws:createapp' %}"><button class="button2">Create App</button></a>
+<a href="{% url 'aws:manageapp' %}"><button class="button2">Manage App</button></a>
+
+<p>&nbsp;</p>
+
+
+<form method="POST">
+      {{form.as_p}}
+      {% csrf_token %}
+      <input type="submit" name="" value="submit">
+      </form>
+
+{% endblock %}
