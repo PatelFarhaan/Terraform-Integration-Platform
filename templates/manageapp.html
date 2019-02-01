@@ -16,6 +16,7 @@
     <th>Description</th>
     <th>Plan to Migrate</th>
     <th>App Names</th>
+    <th>Action</th>
   </tr>
 
   {% for app in apps %}
@@ -26,6 +27,13 @@
     <td>{{ app.description }}</td>
     <td>{{ app.plan_to_migrate }}</td>
     <td>{{ app.app_names }}</td>
+    <td>
+      <form  method="POST" >
+        {% csrf_token %}
+        <input type="hidden" name="appname" value="{{ app.name }}">
+      <input type="submit" value="Delete">
+      </form>
+    </td>
 
   </tr>
   {% endfor %}

@@ -1,7 +1,7 @@
 import boto3
 from django.shortcuts import render
-from aws.forms import DashboardForm
 from aws.models import AppsDescription
+from aws.forms import DashboardForm
 
 
 def index(request):
@@ -62,5 +62,11 @@ def createapp(request):
 
 
 def manageapp(request):
+
+    if request.method == "POST":
+        app_name = request.POST.get('appname')
+        del_app = AppsDescription.objects.filter(name=app_name).first().delete()
+
+
     apps = AppsDescription.objects.order_by("name")
     return render(request, "manageapp.html", {"apps":apps})
