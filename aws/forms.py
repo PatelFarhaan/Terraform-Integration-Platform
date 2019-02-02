@@ -1,6 +1,6 @@
 import boto3
 from django import forms
-from aws.models import AppsDescription
+from aws.models import AppsDescription, InfraServiceInfo
 
 
 def aws_list_conf_api_call():
@@ -43,4 +43,10 @@ def aws_list_conf_api_call():
 class DashboardForm(forms.ModelForm):
     class Meta():
         model = AppsDescription
+        fields = '__all__'
+
+
+class InfraForm(forms.ModelForm):
+    class Meta():
+        model = InfraServiceInfo
         fields = '__all__'

@@ -34,11 +34,16 @@
 
   .button2 {width: 40%;}
 
+  .server_table{
+    width: 90%;
+    margin: 50px auto;
+  }
+
     table {
       font-family: arial, sans-serif;
       border-collapse: collapse;
       width: 100%;
-      align-items: center;
+      align-items: left;
     }
 
     td, th {
@@ -83,12 +88,14 @@
       </div>
     </nav>
 
+<div class="server_table">
+
 
     {% block content %}
 
 
     {% endblock %}
-
+</div>
 
 
     <!-- Footer -->

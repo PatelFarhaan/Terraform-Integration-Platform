@@ -89,3 +89,7 @@ margin: 15px;
  color: white;
  transform: rotateY(180deg);
 }
+
+#id_app_names{
+  list-style: none;
+}

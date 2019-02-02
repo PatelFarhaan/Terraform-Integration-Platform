@@ -8,4 +8,5 @@ urlpatterns = [
     path('dashboard/', views.dashboardform, name="dashboard"),
     path('createapp/', views.createapp, name="createapp"),
     path('manageapp/', views.manageapp, name="manageapp"),
+    path('infraservice/', views.infraservice, name="infraservice"),
 ]
