@@ -16,9 +16,10 @@ Including another URLconf
 
 from django.urls import path
 from django.contrib import admin
-from django.conf.urls import include
+from django.conf.urls import include, url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('aws/', include("aws.urls")),
+    url(r'^someurlprefix/', include('django_select2.urls')),
 ]

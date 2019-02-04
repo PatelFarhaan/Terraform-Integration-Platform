@@ -15,7 +15,7 @@
     <th>Name</th>
     <th>Description</th>
     <th>Plan to Migrate</th>
-    <th>App Names</th>
+    <th>Server Names</th>
     <th>Action</th>
   </tr>
 
@@ -26,7 +26,7 @@
     <td>{{ app.name }}</td>
     <td>{{ app.description }}</td>
     <td>{{ app.plan_to_migrate }}</td>
-    <td>{{ app.app_names }}</td>
+    <td>{{ app.server_names }}</td>
     <td>
       <form  method="POST" >
         {% csrf_token %}

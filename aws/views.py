@@ -1,6 +1,6 @@
 import boto3
 from django.shortcuts import render
-from aws.models import AppsDescription, InfraServiceInfo
+from aws.models import AppsDescription, InfraServiceInfo, ServerAwsInfo
 from aws.forms import DashboardForm, InfraForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -14,6 +14,43 @@ def dashboardform(request):
     new_dict = aws_list_conf_api_call()
     return render(request, "dashboard.html", {'aws_response': new_dict})
 
+
+def create_aws_app(name, description):
+    client = boto3.client('discovery', region_name='us-west-2')
+
+    response = client.create_application(
+        name=name,
+        description=description
+    )
+
+    return response
+
+def aws_server_list_conf():
+    client = boto3.client('discovery', region_name='us-west-2')
+    response = client.list_configurations(
+        configurationType="SERVER",
+        filters=[]
+    )
+
+    count = list()
+    key_list = list()
+    value_list = list()
+
+    for i in response['configurations']:
+        count.append(len(i))
+
+    new_dict = list()
+
+    for k, v in response.items():
+        if k == 'configurations':
+            for b in range(len(count)):
+                for k1, v1 in v[b].items():
+                    key_list.append(k1[7:])
+                    value_list.append(v1)
+
+                new_dict.append(dict(zip(key_list, value_list)))
+
+    return new_dict
 
 
 def aws_list_conf_api_call():
@@ -49,28 +86,55 @@ def aws_list_conf_api_call():
 
 
 def createapp(request):
+
+    ServerAwsInfo.objects.all().delete()
+    server_response = aws_server_list_conf()
+    for i in server_response:
+        ServerAwsInfo.objects.create(**i)
+
+
     form = DashboardForm()
 
     if request.method == "POST":
         form = DashboardForm(request.POST)
+        server_id = request.POST.getlist('serverId')
 
         if form.is_valid:
-            form.save(commit=True)
-            return HttpResponseRedirect(reverse("aws:createapp"))
 
-    return render(request, "createapp.html", {'form':form})
+            if form.data["plan_to_migrate"] == 'yes':
+                create_app_resp = create_aws_app(form.data['name'], form.data['description'])
+                AppsDescription.objects.create(name=form.data["name"],
+                                                     description=form.data["description"],
+                                                     plan_to_migrate=form.data["plan_to_migrate"],
+                                                     server_names=server_id,
+                                                     create_app_response=create_app_resp)
+                return HttpResponseRedirect(reverse("aws:createapp"))
+            else:
+                AppsDescription.objects.create(name=form.data["name"],
+                                               description=form.data["description"],
+                                               plan_to_migrate=form.data["plan_to_migrate"],
+                                               server_names=server_id)
+                return HttpResponseRedirect(reverse("aws:createapp"))
+
+    server = ServerAwsInfo.objects.all()
+    return render(request, "createapp.html", {'server':server, 'form': form})
 
 
 def manageapp(request):
 
+    # AppsDescription.objects.all().delete()
+
     if request.method == "POST":
         app_name = request.POST.get('appname')
-        del_app = AppsDescription.objects.filter(name=app_name).first().delete()
+        AppsDescription.objects.filter(name=app_name).first().delete()
 
 
-    apps = AppsDescription.objects.order_by("name")
+    apps = AppsDescription.objects.order_by("-id")
     return render(request, "manageapp.html", {"apps":apps})
 
+
+def manageenv(request):
+    return render(request, "manageenv.html")
 
 def infraservice(request):
     form = InfraForm()

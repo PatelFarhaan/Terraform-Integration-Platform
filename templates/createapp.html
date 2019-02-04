@@ -1,9 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
 
 
 <a href="{% url 'aws:createapp' %}"><button class="button2">Create App</button></a>
@@ -14,8 +11,48 @@
 
 <form method="POST">
       {{form.as_p}}
+
+      <table>
+        <tr>
+          <th>Select</th>
+          <th>Agent ID</th>
+          <th>Configuration ID</th>
+          <th>Host Name</th>
+          <th>OS Name</th>
+          <th>OS Version</th>
+          <th>Source</th>
+          <th>Time of Creation</th>
+          <th>Type</th>
+        </tr>
+
+        {% for app in server %}
+        <tr>
+
+          <td>
+            <input type="checkbox" name="serverId" value="{{ app.configurationId }}">
+          </td>
+
+          <td>{{ app.agentId }}</td>
+          <td>{{ app.configurationId }}</td>
+          <td>{{ app.hostName }}</td>
+          <td>{{ app.osName }}</td>
+          <td>{{ app.osVersion }}</td>
+          <td>{{ app.source }}</td>
+          <td>{{ app.timeOfCreation }}</td>
+          <td>{{ app.type }}</td>
+
+
+        </tr>
+        {% endfor %}
+
+      </table>
+
+<p>&nbsp;</p>
+
+
+
       {% csrf_token %}
-      <input type="submit" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" name="" value="submit">
+      <input type="submit" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" name="" value="Create App">
       <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
             <div class="alert alert-success alert-dismissible">

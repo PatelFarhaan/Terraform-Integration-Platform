@@ -10,7 +10,7 @@ def aws_list_conf_api_call():
     aws_response = client.list_configurations(
 
         configurationType="APPLICATION",
-        filters=[]
+        filters=[],
 
     )
 
@@ -43,7 +43,8 @@ def aws_list_conf_api_call():
 class DashboardForm(forms.ModelForm):
     class Meta():
         model = AppsDescription
-        fields = '__all__'
+        widget = {'plan_to_migrate': forms.RadioSelect}
+        exclude = ["server_names", "create_app_response"]
 
 
 class InfraForm(forms.ModelForm):
