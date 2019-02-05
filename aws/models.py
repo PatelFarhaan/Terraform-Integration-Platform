@@ -1,5 +1,8 @@
 import boto3
 from django.db import models as db
+from django.db.models import CharField
+from django_mysql.models import ListCharField
+
 
 
 def aws_server_list_conf():
@@ -112,34 +115,46 @@ class AppsDescription(db.Model):
     def __str__(self):
         return self.name
 
+
+class StaticData(db.Model):
+
+    stack = ListCharField(base_field=CharField(max_length=1000), max_length=1000)
+    description = ListCharField(base_field=CharField(max_length=1000), max_length=1000)
+    instance_type = ListCharField(base_field=CharField(max_length=1000), max_length=1000)
+    instance_number = ListCharField(base_field=CharField(max_length=1000), max_length=1000)
+
+
 class InfraServiceInfo(db.Model):
 
+    AppsDescription_names = AppsDescription.objects.all()
+    ins_choice = StaticData.objects.all()
     aws_response = aws_list_conf_api_call2()
-    APP_CHOICES = list()
     DESC_CHOICES = list()
-    NO_INS_CHOICES = list()
+
+    for i in ins_choice:
+        global INS_CHOICES
+        INS_CHOICES = i.instance_number
 
     VIEW_APP_CHOICES = list()
     VIEW_DESC_CHOICES = list()
-    VIEW_NO_INS_CHOICES = list()
+    VIEW_NO_INS_CHOICES = []
 
 
     for i in aws_response:
-        APP_CHOICES.append(i["name"])
         DESC_CHOICES.append(i["description"])
-        NO_INS_CHOICES.append(i["serverCount"])
 
-    for app_names in APP_CHOICES:
-        VIEW_APP_CHOICES.append(('{}'.format(app_names.lower()), '{}'.format(app_names)), )
+
+    for app_names in AppsDescription_names:
+        VIEW_APP_CHOICES.append(('{}'.format(app_names.name.lower()), '{}'.format(app_names.name)), )
     for app_names in DESC_CHOICES:
         VIEW_DESC_CHOICES.append(('{}'.format(app_names.lower()), '{}'.format(app_names)), )
-    for app_names in NO_INS_CHOICES:
-        VIEW_NO_INS_CHOICES.append(('{}'.format(app_names.lower()), '{}'.format(app_names)), )
+    for app_names in INS_CHOICES:
+        VIEW_NO_INS_CHOICES.append(("{}".format(app_names), "{}".format(app_names)))
 
     app_name = db.CharField(choices=VIEW_APP_CHOICES, max_length=1000)
     env_name = db.CharField(max_length=1000)
     stack = db.CharField(max_length=1000)
-    description = db.TextField(choices=VIEW_DESC_CHOICES, editable=False)
+    description = db.TextField()
     no_of_instance = db.CharField(choices=VIEW_NO_INS_CHOICES, max_length=256)
     instance_type = db.CharField(max_length=256)
     ssh_location = db.GenericIPAddressField()
@@ -149,6 +164,7 @@ class InfraServiceInfo(db.Model):
 
 
 class ServerAwsInfo(db.Model):
+
     agentId = db.CharField(max_length=1000)
     configurationId = db.CharField(max_length=1000)
     hostName = db.CharField(max_length=1000)
@@ -160,3 +176,5 @@ class ServerAwsInfo(db.Model):
 
     def __str__(self):
         return self.hostName
+
+

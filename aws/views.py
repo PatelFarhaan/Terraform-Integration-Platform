@@ -17,6 +17,14 @@ def dashboardform(request):
     return render(request, "dashboard.html", {'aws_response': new_dict})
 
 
+def aws_applicationId_status(applicationId):
+    client = boto3.client('mgh', region_name='us-west-2')
+    response = client.describe_application_state(
+        ApplicationId = applicationId
+    )
+    return response['ApplicationStatus']
+
+
 def create_aws_app(name, description):
     client = boto3.client('discovery', region_name='us-west-2')
 
@@ -84,6 +92,9 @@ def aws_list_conf_api_call():
 
                 new_dict.append(dict(zip(key_list, value_list)))
 
+    for i in new_dict:
+        i['app_status'] = aws_applicationId_status(i['configurationId'])
+
     return new_dict
 
 
@@ -139,7 +150,7 @@ def manageenv(request):
     return render(request, "manageenv.html")
 
 
-def infraservice(request):
+def infraCompute(request):
     form = InfraForm()
 
     if request.method == "POST":
