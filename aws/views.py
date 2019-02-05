@@ -1,9 +1,11 @@
 import boto3
-from django.shortcuts import render
-from aws.models import AppsDescription, InfraServiceInfo, ServerAwsInfo
-from aws.forms import DashboardForm, InfraForm
-from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from aws.forms import DashboardForm, InfraForm
+from aws.models import AppsDescription, InfraServiceInfo, ServerAwsInfo
+
+
 
 def index(request):
     return render(request, "index.html")
@@ -136,15 +138,15 @@ def manageapp(request):
 def manageenv(request):
     return render(request, "manageenv.html")
 
+
 def infraservice(request):
     form = InfraForm()
 
     if request.method == "POST":
         form = InfraForm(request.POST)
-        print("ok")
 
         if form.is_valid():
             form.save(commit=True)
             return HttpResponseRedirect(reverse("aws:infraservice"))
 
-    return render(request, "infraservice.html", {"form":form})
+    return render(request, "infraservice.html", {'form': form})

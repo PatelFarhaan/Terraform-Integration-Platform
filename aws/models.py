@@ -1,9 +1,6 @@
 import boto3
 from django.db import models as db
 
-from multiselectfield import MultiSelectField
-
-
 
 def aws_server_list_conf():
     client = boto3.client('discovery', region_name='us-west-2')
@@ -11,28 +8,11 @@ def aws_server_list_conf():
         configurationType="SERVER",
         filters=[]
     )
-    #
-    # count = list()
-    # key_list = list()
-    # value_list = list()
+
     server_id_list = list()
 
     for i in response['configurations']:
         server_id_list.append(i['server.configurationId'])
-
-    # for i in response['configurations']:
-    #     count.append(len(i))
-    #
-    # new_dict = list()
-    #
-    # for k, v in response.items():
-    #     if k == 'configurations':
-    #         for b in range(len(count)):
-    #             for k1, v1 in v[b].items():
-    #                 key_list.append(k1[7:])
-    #                 value_list.append(v1)
-    #
-    #             new_dict.append(dict(zip(key_list, value_list)))
 
     return server_id_list
 
@@ -120,8 +100,6 @@ class AppsDescription(db.Model):
                ("no", "NO")]
     OPTIONS = list()
 
-    # server_id_list = list()
-
     for apps in aws_response:
         OPTIONS.append(('{name1}'.format(name1=apps.lower()), '{name2}'.format(name2=apps)), )
 
@@ -133,7 +111,6 @@ class AppsDescription(db.Model):
 
     def __str__(self):
         return self.name
-
 
 class InfraServiceInfo(db.Model):
 
@@ -162,7 +139,7 @@ class InfraServiceInfo(db.Model):
     app_name = db.CharField(choices=VIEW_APP_CHOICES, max_length=1000)
     env_name = db.CharField(max_length=1000)
     stack = db.CharField(max_length=1000)
-    description = db.TextField('InfraServiceInfo', choices=VIEW_DESC_CHOICES)
+    description = db.TextField(choices=VIEW_DESC_CHOICES, editable=False)
     no_of_instance = db.CharField(choices=VIEW_NO_INS_CHOICES, max_length=256)
     instance_type = db.CharField(max_length=256)
     ssh_location = db.GenericIPAddressField()
