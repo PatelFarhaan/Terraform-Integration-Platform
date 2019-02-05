@@ -1,3 +1,5 @@
+import os
+import json
 import boto3
 from django.urls import reverse
 from django.shortcuts import render
@@ -98,6 +100,24 @@ def aws_list_conf_api_call():
     return new_dict
 
 
+def ec2_json(ins_type, ins_count, ins_ami, ins_env, app_name, env_id, location):
+    data = {"ec2_instancetype":"{}".format(ins_type),
+    "ec2_count":"{}".format(ins_count),
+    "ec2_ami":"{}".format(ins_ami),
+    "ec2_environment":"{}".format(ins_env),
+    "ec2_appname":"{}".format(app_name),
+    "ec2_environment_id":"{}".format(env_id)}
+
+    json_data = json.dumps(data)
+
+    file = open(location+'/ec2.tfvars.json', 'w')
+
+    for i in json_data:
+        file.write(i)
+
+    file.close()
+
+
 def createapp(request):
 
     ServerAwsInfo.objects.all().delete()
@@ -151,6 +171,9 @@ def manageenv(request):
 
 
 def infraCompute(request):
+
+
+    # import ipdb; ipdb.set_trace()
     form = InfraForm()
 
     if request.method == "POST":
@@ -158,6 +181,38 @@ def infraCompute(request):
 
         if form.is_valid():
             form.save(commit=True)
-            return HttpResponseRedirect(reverse("aws:infraservice"))
+            #  /home/ec2-user/<appid>/<envid>/<envname>/
+
+            app_name = form.data['app_name']
+            env_name = form.data['env_name']
+            new_env_name = ''.join(env_name.split())
+
+
+            app_id = AppsDescription.objects.get(name=app_name).id
+            env_id = InfraServiceInfo.objects.get(env_name=env_name).id
+
+
+
+            try:
+                aws_home_folder_location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=app_id,
+                                                                                 ei=env_id,
+                                                                                 en=new_env_name)
+
+                original_umask = os.umask(0)
+                os.makedirs(aws_home_folder_location, mode=0o777)
+            finally:
+                os.umask(original_umask)
+
+            ec2_json(form.data['instance_type'],
+                     form.data['no_of_instance'],
+                     form.data['stack'],
+                     new_env_name,
+                     app_name,
+                     env_id,
+                     aws_home_folder_location)
+
+
+
+            return HttpResponseRedirect(reverse("aws:createenv"))
 
     return render(request, "infraservice.html", {'form': form})

@@ -1,3 +1,4 @@
-from pathlib import Path
-home = str(Path.home())
-print(home)
+import os
+
+print(os.path.isdir("/home"))
+os.mkdir('/home/farhaan')

@@ -97,16 +97,16 @@ class AppsDescription(db.Model):
     SERVER_CHOICES = []
 
     for i in server_response:
-        SERVER_CHOICES.append(('{lower}'.format(lower=i.lower()), '{upper}'.format(upper=i)), )
+        SERVER_CHOICES.append(('{lower}'.format(lower=i), '{upper}'.format(upper=i)), )
 
     CHOICES = [("yes", "YES"),
                ("no", "NO")]
     OPTIONS = list()
 
     for apps in aws_response:
-        OPTIONS.append(('{name1}'.format(name1=apps.lower()), '{name2}'.format(name2=apps)), )
+        OPTIONS.append(('{name1}'.format(name1=apps), '{name2}'.format(name2=apps)), )
 
-    name = db.CharField(max_length=256)
+    name = db.CharField(max_length=256, unique=True)
     description = db.TextField()
     plan_to_migrate = db.CharField(choices=CHOICES, max_length=256)
     server_names = db.TextField(null=True)
@@ -131,13 +131,19 @@ class InfraServiceInfo(db.Model):
     aws_response = aws_list_conf_api_call2()
     DESC_CHOICES = list()
 
+
     for i in ins_choice:
-        global INS_CHOICES
+        global STACK_CHOICE, INS_CHOICES, INS_TYPE
+        STACK_CHOICE = i.stack
         INS_CHOICES = i.instance_number
+        INS_TYPE = i.instance_type
+
 
     VIEW_APP_CHOICES = list()
     VIEW_DESC_CHOICES = list()
     VIEW_NO_INS_CHOICES = []
+    VIEW_STACK_CHOICES = []
+    VIEW_INS_TYPE = []
 
 
     for i in aws_response:
@@ -145,19 +151,21 @@ class InfraServiceInfo(db.Model):
 
 
     for app_names in AppsDescription_names:
-        VIEW_APP_CHOICES.append(('{}'.format(app_names.name.lower()), '{}'.format(app_names.name)), )
-    for app_names in DESC_CHOICES:
-        VIEW_DESC_CHOICES.append(('{}'.format(app_names.lower()), '{}'.format(app_names)), )
+        VIEW_APP_CHOICES.append(('{}'.format(app_names.name), '{}'.format(app_names.name)), )
     for app_names in INS_CHOICES:
         VIEW_NO_INS_CHOICES.append(("{}".format(app_names), "{}".format(app_names)))
+    for app_names in STACK_CHOICE:
+        VIEW_STACK_CHOICES.append(("{}".format(app_names), "{}".format(app_names)))
+    for app_names in INS_TYPE:
+        VIEW_INS_TYPE.append(("{}".format(app_names), "{}".format(app_names)))
 
     app_name = db.CharField(choices=VIEW_APP_CHOICES, max_length=1000)
-    env_name = db.CharField(max_length=1000)
-    stack = db.CharField(max_length=1000)
-    description = db.TextField()
+    env_name = db.CharField(max_length=1000, unique=True)
+    stack = db.CharField(choices=VIEW_STACK_CHOICES, max_length=1000)
+    description = db.TextField(blank=True)
     no_of_instance = db.CharField(choices=VIEW_NO_INS_CHOICES, max_length=256)
-    instance_type = db.CharField(max_length=256)
-    ssh_location = db.GenericIPAddressField()
+    instance_type = db.CharField(choices=VIEW_INS_TYPE, max_length=256)
+    ssh_location = db.GenericIPAddressField(default='192.168.1.2')
 
     def __str__(self):
         return self.app_name
