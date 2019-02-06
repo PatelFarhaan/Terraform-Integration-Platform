@@ -1,11 +1,12 @@
 import os
 import json
 import boto3
+import bcrypt
 from django.urls import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from aws.forms import DashboardForm, InfraForm
-from aws.models import AppsDescription, InfraServiceInfo, ServerAwsInfo
+from aws.forms import DashboardForm,InfraDatabase,InfraForm, InfraCicds
+from aws.models import AppsDescription, ServerAwsInfo, InfraServiceInfo
 
 
 
@@ -101,16 +102,78 @@ def aws_list_conf_api_call():
 
 
 def ec2_json(ins_type, ins_count, ins_ami, ins_env, app_name, env_id, location):
-    data = {"ec2_instancetype":"{}".format(ins_type),
+    data = {
+    "ec2_instancetype":"{}".format(ins_type),
     "ec2_count":"{}".format(ins_count),
     "ec2_ami":"{}".format(ins_ami),
     "ec2_environment":"{}".format(ins_env),
     "ec2_appname":"{}".format(app_name),
-    "ec2_environment_id":"{}".format(env_id)}
+    "ec2_environment_id":"{}".format(env_id)
+    }
 
     json_data = json.dumps(data)
 
     file = open(location+'/ec2.tfvars.json', 'w')
+
+    for i in json_data:
+        file.write(i)
+
+    file.close()
+
+
+def db_json(rds_eng, ins_type, red_store, rds_user, rds_pass, app_name, rds_env, rds_env_id, location):
+    data = {
+        "rds_engine":"{}".format(rds_eng),
+        "rds_instance":"{}".format(ins_type),
+        "rds_storage":"{}".format(red_store),
+        "rds_username":"{}".format(rds_user),
+        "rds_password":"{}".format(rds_pass),
+        "rds_appname":"{}".format(app_name),
+        "rds_environment":"{}".format(rds_env),
+        "rds_environment_id":"{}".format(rds_env_id)
+    }
+
+    json_data = json.dumps(data)
+
+    file = open(location+'/rds.tfvars.json', 'w')
+
+    for i in json_data:
+        file.write(i)
+
+    file.close()
+
+
+def cicd_json(app_name, repo_name, env_name, env_id, bucket, location):
+    data = {
+        "cicd_appname":"hack3",
+        "repo_name":"hack3",
+        "cicd_env":"dev",
+        "cicd_env_id":"3",
+        "s3_artifact_bucket":"hack3"
+    }
+
+    json_data = json.dumps(data)
+
+    file = open(location + '/cicd.tfvars.json', 'w')
+
+    for i in json_data:
+        file.write(i)
+
+    file.close()
+
+
+def cicd_json(app_name, repo_name, env_name, env_id, bucket, location):
+    data = {
+        "cicd_appname":"{}".format(app_name),
+        "repo_name":"{}".format(repo_name),
+        "cicd_env":"{}".format(env_id),
+        "cicd_env_id":"{}".format(env_id),
+        "s3_artifact_bucket":"{}".format(bucket)
+    }
+
+    json_data = json.dumps(data)
+
+    file = open(location + '/cicd.tfvars.json', 'w')
 
     for i in json_data:
         file.write(i)
@@ -173,7 +236,6 @@ def manageenv(request):
 def infraCompute(request):
 
 
-    # import ipdb; ipdb.set_trace()
     form = InfraForm()
 
     if request.method == "POST":
@@ -181,7 +243,6 @@ def infraCompute(request):
 
         if form.is_valid():
             form.save(commit=True)
-            #  /home/ec2-user/<appid>/<envid>/<envname>/
 
             app_name = form.data['app_name']
             env_name = form.data['env_name']
@@ -191,7 +252,12 @@ def infraCompute(request):
             app_id = AppsDescription.objects.get(name=app_name).id
             env_id = InfraServiceInfo.objects.get(env_name=env_name).id
 
-
+            request.session['app_name'] = app_name
+            request.session['app_id'] = app_id
+            request.session['env_id'] = env_id
+            request.session['env_name'] = new_env_name
+            request.session['ins_type'] = form.data['instance_type']
+            request.session['env_desc'] = form.data['description']
 
             try:
                 aws_home_folder_location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=app_id,
@@ -211,8 +277,64 @@ def infraCompute(request):
                      env_id,
                      aws_home_folder_location)
 
-
-
-            return HttpResponseRedirect(reverse("aws:createenv"))
+            return HttpResponseRedirect(reverse("aws:infradb"))
 
     return render(request, "infraservice.html", {'form': form})
+
+
+
+
+def infradatabase(request):
+
+    form = InfraDatabase()
+
+    if request.method == "POST":
+        form = InfraDatabase(request.POST)
+
+        if form.is_valid():
+            form.save(commit=True)
+
+            location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=request.session['app_id'],
+                                                             ei=request.session['env_id'],
+                                                             en=request.session['env_name'])
+            db_json(form.data['engine'], form.data['db_instance_class'],
+                    form.data['volume_size'], form.data['username'],
+                    form.data['password'], request.session['app_name'],
+                    request.session['env_name'], request.session['env_id'],
+                    location)
+
+            return HttpResponseRedirect(reverse("aws:infracicd"))
+
+    else:
+        form = InfraDatabase()
+
+    return render(request, "infradatabase.html", {'form':form})
+
+
+
+def infracicd(request):
+
+    form = InfraCicds()
+
+    if request.method == "POST":
+        form = InfraCicds(request.POST)
+
+        if form.is_valid():
+            form.save(commit=True)
+
+            location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=request.session['app_id'],
+                                                             ei=request.session['env_id'],
+                                                             en=request.session['env_name'])
+            cicd_json(request.session['app_name'], form.data['name'],
+                      request.session['env_name'], request.session['env_id'],
+                      form.data['name'], location)
+
+
+
+        return HttpResponseRedirect(reverse("aws:createenv"))
+
+    else:
+        form = InfraCicds()
+
+    return render(request, "infracicd.html", {'form':form})
+

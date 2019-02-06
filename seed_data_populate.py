@@ -7,7 +7,7 @@ django.setup()
 ####################################################################################
 
 
-from aws.models import StaticData, AppsDescription, InfraServiceInfo
+from aws.models import StaticData
 
 
 def populate_Seed_data():
@@ -25,24 +25,15 @@ def populate_Seed_data():
     StaticData.objects.create(stack=stack_list,
                               description=stack_description,
                               instance_type=instance_type,
-                              instance_number=instance_number)
+                              instance_number=instance_number,
+                              engine=engine)
 
 
 def test_db():
+    print("ok")
 
-    obj = AppsDescription.objects.get(name='Aifi-2')
-    print(obj.id)
 
-    # import ipdb; ipdb.set_trace()
-    VIEW_STACK_CHOICES = []
-
-    ins_choice = StaticData.objects.all()
-    for i in ins_choice:
-        print(i.stack)
-        print(i.instance_number)
-        print(i.instance_number)
 
 if __name__ == '__main__':
     populate_Seed_data()
     # test_db()
-    # print("Success!!!")

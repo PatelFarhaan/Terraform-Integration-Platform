@@ -89,6 +89,9 @@ def aws_list_conf_api_call2():
 
     return new_dict
 
+#######################################################################################################################
+
+
 
 class AppsDescription(db.Model):
     aws_response = aws_list_conf_api_call()
@@ -122,6 +125,7 @@ class StaticData(db.Model):
     description = ListCharField(base_field=CharField(max_length=1000), max_length=1000)
     instance_type = ListCharField(base_field=CharField(max_length=1000), max_length=1000)
     instance_number = ListCharField(base_field=CharField(max_length=1000), max_length=1000)
+    engine = ListCharField(base_field=CharField(max_length=1000), max_length=1000)
 
 
 class InfraServiceInfo(db.Model):
@@ -184,5 +188,47 @@ class ServerAwsInfo(db.Model):
 
     def __str__(self):
         return self.hostName
+
+
+class InfraDatabases(db.Model):
+
+    engine_list = StaticData.objects.all()
+    ins_choice = StaticData.objects.all()
+
+    for i in ins_choice:
+        global INS_TYPE
+        INS_TYPE = i.instance_type
+
+    VIEW_INS_TYPE = []
+
+    for app_names in INS_TYPE:
+        VIEW_INS_TYPE.append(("{}".format(app_names), "{}".format(app_names)))
+
+    for i in engine_list:
+        global ENG
+        ENG = i.engine
+
+        VIEW_ENG_LIST = list()
+        for app_names in ENG:
+            VIEW_ENG_LIST.append(("{}".format(app_names), "{}".format(app_names)))
+
+
+    engine = db.CharField(choices=VIEW_ENG_LIST, max_length=1000)
+    db_instance_class = db.CharField(choices=VIEW_INS_TYPE, max_length=1000)
+    username = db.CharField(max_length=256)
+    password = db.CharField(max_length=1000)
+    volume_size = db.PositiveIntegerField(default=0)
+    # env_name = db.ForeignKey(InfraServiceInfo, on_delete=db.CASCADE, default=None)
+
+
+class InfraCicd(db.Model):
+
+    TYPE_CHOICES = [
+        ("s3", "s3"),
+        ("code commit", "code commit")
+    ]
+
+    source_repo = db.CharField(choices=TYPE_CHOICES, max_length=1000)
+    name = db.CharField(max_length=1000)
 
 

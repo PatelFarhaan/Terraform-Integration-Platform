@@ -10,4 +10,6 @@ urlpatterns = [
     path('manageapp/', views.manageapp, name="manageapp"),
     path('createenv/', views.infraCompute, name="createenv"),
     path('manageenv', views.manageenv, name="manageenv"),
+    path('infradb/', views.infradatabase, name="infradb"),
+    path('infracicd/', views.infracicd, name="infracicd"),
 ]
