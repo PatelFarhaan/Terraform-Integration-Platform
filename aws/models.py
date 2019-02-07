@@ -218,7 +218,6 @@ class InfraDatabases(db.Model):
     username = db.CharField(max_length=256)
     password = db.CharField(max_length=1000)
     volume_size = db.PositiveIntegerField(default=0)
-    # env_name = db.ForeignKey(InfraServiceInfo, on_delete=db.CASCADE, default=None)
 
 
 class InfraCicd(db.Model):
@@ -232,3 +231,28 @@ class InfraCicd(db.Model):
     name = db.CharField(max_length=1000)
 
 
+class CreateMigrations(db.Model):
+
+    app_names = AppsDescription.objects.all()
+    VIEW_APP_CHOICES = []
+    for app_name in app_names:
+        VIEW_APP_CHOICES.append(('{}'.format(app_name.name), '{}'.format(app_name.name)), )
+
+    env_names = InfraServiceInfo.objects.all()
+    VIEW_ENV_CHOICES = []
+    for app_names in env_names:
+        VIEW_ENV_CHOICES.append(('{}'.format(app_names.env_name), '{}'.format(app_names.env_name)), )
+
+    db_names = InfraDatabases.objects.all()
+    VIEW_DB_CHOICES = []
+    for app_names in db_names:
+        VIEW_DB_CHOICES.append(('{}'.format(app_names.engine), '{}'.format(app_names.engine)), )
+
+
+    app_name = db.CharField(choices=VIEW_APP_CHOICES, max_length=1000)
+    env_name = db.CharField(choices=VIEW_ENV_CHOICES, max_length=1000)
+    source_ip = db.GenericIPAddressField(default='192.168.1.2')
+    source_username = db.CharField(max_length=1000)
+    source_password = db.CharField(max_length=1000)
+    source_db = db.CharField(max_length=1000)
+    destination_db = db.CharField(choices=VIEW_DB_CHOICES, max_length=1000)

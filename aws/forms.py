@@ -1,5 +1,5 @@
 from django import forms
-from aws.models import AppsDescription, InfraServiceInfo, InfraDatabases, InfraCicd
+from aws.models import AppsDescription, InfraServiceInfo, InfraDatabases, InfraCicd, CreateMigrations
 
 
 
@@ -29,4 +29,11 @@ class InfraCicds(forms.ModelForm):
 
     class Meta():
         model = InfraCicd
+        fields = '__all__'
+
+
+class CreateMigrationForm(forms.ModelForm):
+
+    class Meta():
+        model = CreateMigrations
         fields = '__all__'

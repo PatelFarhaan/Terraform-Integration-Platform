@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['ec2-3-84-162-66.compute-1.amazonaws.com',
                  'localhost:8000']
 
+# ALLOWED_HOSTS = []
 
 # Application definition
 

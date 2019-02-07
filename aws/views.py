@@ -1,13 +1,11 @@
 import os
 import json
 import boto3
-import bcrypt
 from django.urls import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from aws.forms import DashboardForm,InfraDatabase,InfraForm, InfraCicds
 from aws.models import AppsDescription, ServerAwsInfo, InfraServiceInfo
-
+from aws.forms import DashboardForm,InfraDatabase,InfraForm, InfraCicds, CreateMigrationForm
 
 
 def index(request):
@@ -338,3 +336,24 @@ def infracicd(request):
 
     return render(request, "infracicd.html", {'form':form})
 
+
+def createmigrations(request):
+
+    form = CreateMigrationForm()
+
+    if request.method == 'POST':
+        form = CreateMigrationForm(request.POST)
+
+        if form.is_valid():
+            form.save(commit=True)
+
+        return HttpResponseRedirect(reverse('aws:managemigrations'))
+
+    else:
+        form = CreateMigrationForm()
+
+    return render(request, "createmigrations.html", {'form':form})
+
+
+def managemigrations(request):
+    return render(request, "managemigrations.html")

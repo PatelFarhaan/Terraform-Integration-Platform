@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+<p>&nbsp;</p>
+
+<a href="{% url 'aws:createmigrations' %}"><button class="button2">Create Migrations</button></a>
+<a href="{% url 'aws:managemigrations' %}"><button class="button2">Manage Migrations</button></a>
+
+<p>&nbsp;</p>
+
+
+
+
+
+<form method="POST">
+      {{form.as_p}}
+      {% csrf_token %}
+      <input type="submit" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" name="" value="submit">
+      <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="alert alert-success alert-dismissible">
+                <a  class="close" data-dismiss="modal" aria-label="close">&times;</a>
+                <strong>Success!</strong> App information stored Successfully.
+              </div>
+        </div>
+      </div>
+
+      </form>
+
+
+{% endblock %}

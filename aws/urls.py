@@ -12,4 +12,7 @@ urlpatterns = [
     path('manageenv', views.manageenv, name="manageenv"),
     path('infradb/', views.infradatabase, name="infradb"),
     path('infracicd/', views.infracicd, name="infracicd"),
+    path('createmigrations/', views.createmigrations, name="createmigrations"),
+    path('managemigrations/', views.managemigrations, name="managemigrations"),
+
 ]
