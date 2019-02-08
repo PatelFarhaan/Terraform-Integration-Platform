@@ -1,7 +1,6 @@
 import os
 import json
 import boto3
-import subprocess
 from django.urls import reverse
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -293,7 +292,7 @@ def infraCompute(request):
                      env_id,
                      aws_home_folder_location)
 
-            subprocess.call(['/home/ec2-user/terraform-app.sh', aws_home_folder_location, 'ec2' ])
+            os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} ec2'.format(aws_home_folder_location)))
 
             return HttpResponseRedirect(reverse("aws:infradb"))
 
@@ -323,7 +322,7 @@ def infradatabase(request):
                     request.session['env_name'], request.session['env_id'],
                     location)
 
-            subprocess.call(['/home/ec2-user/terraform-app.sh', location, 'rds'])
+            os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} rds'.format(location)))
 
             return HttpResponseRedirect(reverse("aws:infracicd"))
 
@@ -353,8 +352,8 @@ def infracicd(request):
                       request.session['env_name'], request.session['env_id'],
                       form.data['name'], location)
 
-            subprocess.call(['/home/ec2-user/terraform-app.sh', location, 'cicd'])
-            subprocess.call(['/home/ec2-user/terraform-app.sh', location, 'create'])
+            os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} cicd'.format(location)))
+            os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} create'.format(location)))
 
         return HttpResponseRedirect(reverse("aws:manageenv"))
 

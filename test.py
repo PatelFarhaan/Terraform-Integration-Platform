@@ -1,2 +1,1 @@
-import subprocess
-output = subprocess.call(['home/ec2-user/terraform-app.sh'])
+os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh /home/ec2-user/93/9/testing-phase ec2'))
