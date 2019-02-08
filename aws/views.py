@@ -3,7 +3,8 @@ import json
 import boto3
 from django.urls import reverse
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import HttpResponse
+from rest_framework import serializers
 from django.http import HttpResponseRedirect
 from aws.forms import DashboardForm,InfraDatabase,InfraForm, InfraCicds, CreateMigrationForm
 from aws.models import StaticData, AppsDescription, ServerAwsInfo, InfraServiceInfo, Ec2, Rds, Cicd, CreateMigrations
@@ -387,11 +388,26 @@ def managemigrations(request):
     return render(request, "managemigrations.html", {"migrate": resp})
 
 
-def filter_env_names(request):
-    app_name = request.GET.get('app_name', None)
-    app_id = AppsDescription.objects.get(name=app_name).id
-    data = {
-        'env_names': InfraServiceInfo.objects.filter(app_id=app_id).all()
-    }
+# def filter_env_names(request):
+#
+#     app_name = request.GET.get('app_name', None)
+#     resp = InfraServiceInfo.objects.filter(app_id=AppsDescription.objects.get(name=app_name).id).all()
+#     data = dict()
+#     list = []
+#     for i in resp:
+#         list.append(i.env_name)
+#
+#     print(list)
 
-    return JsonResponse(data)
+    # data = json.loads(data)
+    # data = str(data)
+    # return JsonResponse(json.dumps(data), safe=False)
+
+
+def filter_env_names(request):
+
+    appname = request.GET.get('appname', None)
+    data = list(InfraServiceInfo.objects.filter(app_name=appname).all())
+    print(data)
+    qs_json = serializers.serialize('json', data)
+    return HttpResponse(qs_json, content_type='application/json')

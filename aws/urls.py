@@ -15,5 +15,4 @@ urlpatterns = [
     path('createmigrations/', views.createmigrations, name="createmigrations"),
     path('managemigrations/', views.managemigrations, name="managemigrations"),
     path('getenv/', views.filter_env_names, name="getenv"),
-
 ]

@@ -9,22 +9,52 @@
 <p>&nbsp;</p>
 
 
+{% block javascript %}
 <script>
-  $("#id_username").change(function () {
-    var form = $(this).closest("form");
+  /*
+  window.onload = function() {
+    if (window.jQuery) {
+        // jQuery is loaded
+        alert("Yeah!");
+    } else {
+        // jQuery is not loaded
+        alert("Doesn't Work");
+    }
+}*/
+
+  $("#id_appname").change(function () {
+    var appname = $(this).val();
+    //alert(appname);
+
     $.ajax({
-      url: form.attr("data-validate-username-url"),
-      data: form.serialize(),
+      url: 'ajax/getenv/',
+      data: {
+        'appname': appname
+      },
       dataType: 'json',
       success: function (data) {
-        if (data.is_taken) {
-          alert(data.error_message);
-        }
+        $('#id_envname')
+              .find('option')
+              .remove()
+              .end()
+              .append('<option value="" selected>---</option>');
+        $.each(data, function(k,v){
+          //alert(k + "= "+ v);
+          $.each(v["fields"], function(key,val){
+            if(key == "name"){
+            $('#id_envname')
+              .append('<option value="' + val +'">'+ val + '</option>');
+              //.val('whatever');
+            }
+            //alert(key + ": " + val);
+          });
+        });
+        //alert(data);
       }
     });
-
   });
 </script>
+{% endblock %}
 
 
 <form method="POST">

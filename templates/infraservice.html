@@ -1,31 +1,98 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
+<!DOCTYPE html>
+<html lang="en">
 
-<p>&nbsp;</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="author" content="colorlib.com">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Up Form</title>
 
-<a href="{% url 'aws:createenv' %}"><button class="button2">Create ENV</button></a>
-<a href="{% url 'aws:manageenv' %}"><button class="button2">Manage ENV</button></a>
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="/static/step-form/fonts/material-icon/css/material-design-iconic-font.min.css">
 
-<p>&nbsp;</p>
+    <!-- Main css -->
+    <link rel="stylesheet" href="/static/step-form/css/style.css">
+</head>
+
+<body>
+
+    <div class="main">
+
+        <div class="container">
+            <form method="POST" id="signup-form" class="signup-form">
+                <h3>
+                    <span class="title_text">Compute</span>
+                </h3>
+                <fieldset>
+                    <div class="fieldset-content">
+
+
+                            {{form.as_p}}
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" name="Next>>" value="Next" align="right">
+                            <div class="modal fade" id="myModal" role="dialog">
+                              <div class="modal-dialog">
+                                  <div class="alert alert-success alert-dismissible">
+                                      <a  class="close" data-dismiss="modal" aria-label="close">&times;</a>
+                                      <strong>Success!</strong> App information stored Successfully.
+                                    </div>
+                              </div>
+                            </div>
 
 
 
 
+                    </div>
+                    <div class="fieldset-footer">
+                        <span>Step 1 of 3</span>
+                    </div>
+                </fieldset>
 
-<form method="POST">
-      {{form.as_p}}
-      {% csrf_token %}
-      <input type="submit" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" name="" value="submit">
-      <div class="modal fade" id="myModal" role="dialog">
-        <div class="modal-dialog">
-            <div class="alert alert-success alert-dismissible">
-                <a  class="close" data-dismiss="modal" aria-label="close">&times;</a>
-                <strong>Success!</strong> App information stored Successfully.
-              </div>
+                <h3>
+                    <span class="title_text">Database</span>
+                </h3>
+                <fieldset>
+
+                    <div class="fieldset-content">
+
+                    </div>
+
+                    <div class="fieldset-footer">
+                        <span>Step 2 of 3</span>
+                    </div>
+
+                </fieldset>
+
+                <h3>
+                    <span class="title_text">CICD</span>
+                </h3>
+                <fieldset>
+                    <div class="fieldset-content">
+
+                    </div>
+
+                    <div class="fieldset-footer">
+                        <span>Step 3 of 3</span>
+                    </div>
+                </fieldset>
+            </form>
         </div>
-      </div>
 
-      </form>
+    </div>
 
+    <!-- JS -->
+    <script src="/static/step-form/vendor/jquery/jquery.min.js"></script>
+    <script src="/static/step-form/vendor/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="/static/step-form/vendor/jquery-validation/dist/additional-methods.min.js"></script>
+    <script src="/static/step-form/vendor/jquery-steps/jquery.steps.min.js"></script>
+    <script src="/static/step-form/vendor/minimalist-picker/dobpicker.js"></script>
+    <script src="/static/step-form/vendor/jquery.pwstrength/jquery.pwstrength.js"></script>
+    <script src="/static/step-form/js/main.js"></script>
+</body>
+
+</html>
 
 {% endblock %}
