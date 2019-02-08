@@ -170,6 +170,7 @@ class InfraServiceInfo(db.Model):
     no_of_instance = db.CharField(choices=VIEW_NO_INS_CHOICES, max_length=256)
     instance_type = db.CharField(choices=VIEW_INS_TYPE, max_length=256)
     ssh_location = db.GenericIPAddressField(default='192.168.1.2')
+    app_id = db.CharField(max_length=1000, null=True)
 
     def __str__(self):
         return self.app_name
@@ -185,6 +186,7 @@ class ServerAwsInfo(db.Model):
     source = db.CharField(max_length=1000)
     timeOfCreation = db.CharField(max_length=1000)
     type = db.CharField(max_length=1000)
+
 
     def __str__(self):
         return self.hostName
@@ -218,6 +220,7 @@ class InfraDatabases(db.Model):
     username = db.CharField(max_length=256)
     password = db.CharField(max_length=1000)
     volume_size = db.PositiveIntegerField(default=0)
+    env_id = db.CharField(max_length=1000, null=True)
 
 
 class InfraCicd(db.Model):
@@ -229,6 +232,7 @@ class InfraCicd(db.Model):
 
     source_repo = db.CharField(choices=TYPE_CHOICES, max_length=1000)
     name = db.CharField(max_length=1000)
+    app_id = db.CharField(max_length=1000, null=True)
 
 
 class CreateMigrations(db.Model):
@@ -251,8 +255,48 @@ class CreateMigrations(db.Model):
 
     app_name = db.CharField(choices=VIEW_APP_CHOICES, max_length=1000)
     env_name = db.CharField(choices=VIEW_ENV_CHOICES, max_length=1000)
+    destination_db = db.CharField(choices=VIEW_DB_CHOICES, max_length=1000)
     source_ip = db.GenericIPAddressField(default='192.168.1.2')
     source_username = db.CharField(max_length=1000)
     source_password = db.CharField(max_length=1000)
     source_db = db.CharField(max_length=1000)
-    destination_db = db.CharField(choices=VIEW_DB_CHOICES, max_length=1000)
+
+
+class Ec2(db.Model):
+
+    ec2_instancetype = db.CharField(max_length=1000)
+    ec2_count = db.CharField(max_length=1000)
+    ec2_ami = db.CharField(max_length=1000)
+    ec2_environment = db.CharField(max_length=1000)
+    ec2_appname = db.CharField(max_length=1000)
+    ec2_environment_id = db.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.ec2_appname
+
+
+class Rds(db.Model):
+
+    rds_engine = db.CharField(max_length=1000)
+    rds_instance = db.CharField(max_length=1000)
+    rds_storage = db.CharField(max_length=1000)
+    rds_username = db.CharField(max_length=1000)
+    rds_password = db.CharField(max_length=1000)
+    rds_appname = db.CharField(max_length=1000)
+    rds_environment = db.CharField(max_length=1000)
+    rds_environment_id = db.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.rds_environment
+
+
+class Cicd(db.Model):
+
+    cicd_appname = db.CharField(max_length=1000)
+    repo_name = db.CharField(max_length=1000)
+    env_name = db.CharField(max_length=1000)
+    cicd_env_id = db.CharField(max_length=1000)
+    s3_artifact_bucket = db.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.cicd_appname

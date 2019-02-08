@@ -3,13 +3,157 @@
 
 
 {% block content %}
-<p>&nbsp;</p>
-
-
 
 <p>&nbsp;</p>
 
 <div class="server_table">
+
+
+  <table>
+    <tr>
+      <th>Env ID</th>
+      <th>Env Name</th>
+      <th>Stack</th>
+      <th>Description</th>
+      <th>No of Ins</th>
+      <th>Ins Type</th>
+      <th>SSH Location</th>
+      <th>Action</th>
+    </tr>
+
+    {% for app in env %}
+    <tr>
+
+
+      <td>{{ app.id }}</td>
+      <td>{{ app.env_name }}</td>
+      <td>{{ app.stack }}</td>
+      <td>{{ app.description }}</td>
+      <td>{{ app.no_of_instance }}</td>
+      <td>{{ app.instance_type }}</td>
+      <td>{{ app.ssh_location }}</td>
+      <td>
+        <form  method="POST" >
+          {% csrf_token %}
+          <input type="hidden" name="envid" value="{{app.id}}">
+        <input type="submit" value="Details">
+        </form>
+      </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+
+
+
+
+
+  {% if ec2 %}
+    <p>&nbsp;</p>
+    <h2>EC2</h2>
+  <table>
+    <tr>
+      <th>Instance Type</th>
+      <th>Count</th>
+      <th>AMI</th>
+      <th>Env</th>
+      <th>App name</th>
+    </tr>
+
+    {% for app in ec2 %}
+    <tr>
+
+      <td>{{ app.ec2_instancetype }}</td>
+      <td>{{ app.ec2_count }}</td>
+      <td>{{ app.ec2_ami }}</td>
+      <td>{{ app.ec2_environment }}</td>
+      <td>{{ app.ec2_appname }}</td>
+
+
+    </tr>
+    {% endfor %}
+
+  </table>
+  {% endif %}
+
+
+
+
+  {% if rds %}
+    <p>&nbsp;</p>
+    <h2>RDS</h2>
+  <table>
+    <tr>
+      <th>Engine</th>
+      <th>Instance</th>
+      <th>Storage</th>
+      <th>User name</th>
+      <th>App name</th>
+      <th>Env</th>
+    </tr>
+
+    {% for app in rds %}
+    <tr>
+
+      <td>{{ app.rds_engine }}</td>
+      <td>{{ app.rds_instance }}</td>
+      <td>{{ app.rds_storage }}</td>
+      <td>{{ app.rds_username }}</td>
+      <td>{{ app.rds_appname }}</td>
+      <td>{{ app.rds_environment }}</td>
+
+
+    </tr>
+    {% endfor %}
+
+  </table>
+  {% endif %}
+
+
+
+  {% if cicd %}
+  <p>&nbsp;</p>
+  <h2>CICD</h2>
+  <table>
+    <tr>
+      <th>App Name</th>
+      <th>Repo Name</th>
+      <th>Env Name</th>
+      <th>Artifact Bucket</th>
+    </tr>
+
+    {% for app in cicd %}
+    <tr>
+
+      <td>{{ app.cicd_appname }}</td>
+      <td>{{ app.repo_name }}</td>
+      <td>{{ app.env_name }}</td>
+      <td>{{ app.s3_artifact_bucket }}</td>
+
+
+    </tr>
+    {% endfor %}
+
+  </table>
+  {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -11,11 +11,32 @@
 
 <div class="server_table">
 
+  <table>
+    <tr>
+      <th>App Name</th>
+      <th>Env Name</th>
+      <th>Destination DB</th>
+      <th>Source IP</th>
+      <th>Source User</th>
+      <th>Source DB</th>
+    </tr>
 
+    {% for app in migrate %}
+    <tr>
+
+
+      <td>{{ app.app_name }}</td>
+      <td>{{ app.env_name }}</td>
+      <td>{{ app.destination_db }}</td>
+      <td>{{ app.source_ip }}</td>
+      <td>{{ app.source_username }}</td>
+      <td>{{ app.source_db }}</td>
+      </tr>
+    {% endfor %}
+  </table>
 
 </div>
 
 
 
 {% endblock %}
-  

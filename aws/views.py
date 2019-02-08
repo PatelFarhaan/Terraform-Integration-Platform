@@ -1,11 +1,13 @@
 import os
 import json
 import boto3
+import subprocess
 from django.urls import reverse
 from django.shortcuts import render
+from django.http import JsonResponse
 from django.http import HttpResponseRedirect
-from aws.models import AppsDescription, ServerAwsInfo, InfraServiceInfo
 from aws.forms import DashboardForm,InfraDatabase,InfraForm, InfraCicds, CreateMigrationForm
+from aws.models import StaticData, AppsDescription, ServerAwsInfo, InfraServiceInfo, Ec2, Rds, Cicd, CreateMigrations
 
 
 def index(request):
@@ -143,28 +145,9 @@ def db_json(rds_eng, ins_type, red_store, rds_user, rds_pass, app_name, rds_env,
 
 def cicd_json(app_name, repo_name, env_name, env_id, bucket, location):
     data = {
-        "cicd_appname":"hack3",
-        "repo_name":"hack3",
-        "cicd_env":"dev",
-        "cicd_env_id":"3",
-        "s3_artifact_bucket":"hack3"
-    }
-
-    json_data = json.dumps(data)
-
-    file = open(location + '/cicd.tfvars.json', 'w')
-
-    for i in json_data:
-        file.write(i)
-
-    file.close()
-
-
-def cicd_json(app_name, repo_name, env_name, env_id, bucket, location):
-    data = {
         "cicd_appname":"{}".format(app_name),
         "repo_name":"{}".format(repo_name),
-        "cicd_env":"{}".format(env_id),
+        "env_name":"{}".format(env_name),
         "cicd_env_id":"{}".format(env_id),
         "s3_artifact_bucket":"{}".format(bucket)
     }
@@ -202,13 +185,13 @@ def createapp(request):
                                                      plan_to_migrate=form.data["plan_to_migrate"],
                                                      server_names=server_id,
                                                      create_app_response=create_app_resp)
-                return HttpResponseRedirect(reverse("aws:createapp"))
+                return HttpResponseRedirect(reverse("aws:manageapp"))
             else:
                 AppsDescription.objects.create(name=form.data["name"],
                                                description=form.data["description"],
                                                plan_to_migrate=form.data["plan_to_migrate"],
                                                server_names=server_id)
-                return HttpResponseRedirect(reverse("aws:createapp"))
+                return HttpResponseRedirect(reverse("aws:manageapp"))
 
     server = ServerAwsInfo.objects.all()
     return render(request, "createapp.html", {'server':server, 'form': form})
@@ -228,26 +211,60 @@ def manageapp(request):
 
 
 def manageenv(request):
-    return render(request, "manageenv.html")
+
+    if request.method == "POST":
+        env_obj = InfraServiceInfo.objects.order_by("-id")
+        env_id = request.POST.get("envid")
+        obj = InfraServiceInfo.objects.get(id=env_id)
+        ai = obj.app_id
+        en = obj.env_name
+        path = '/home/ec2-user/{ai}/{ei}/{en}/'.format(ai=ai,ei=env_id,en=en)
+        file_ec2 = 'ec2.tfvars.json'
+        f1 = json.loads(open(path+file_ec2, "r").read())
+        file_ec2 = 'rds.tfvars.json'
+        f2 = json.loads(open(path + file_ec2, "r").read())
+        file_ec2 = 'cicd.tfvars.json'
+        f3 = json.loads(open(path + file_ec2, "r").read())
+
+        Ec2.objects.all().delete()
+        Ec2.objects.create(**f1)
+
+        Rds.objects.all().delete()
+        Rds.objects.create(**f2)
+
+        Cicd.objects.all().delete()
+        Cicd.objects.create(**f3)
+
+        ec2 = Ec2.objects.all()
+        rds = Rds.objects.all()
+        cicd = Cicd.objects.all()
+
+        return render(request, "manageenv.html", {"ec2":ec2, "rds":rds, "cicd":cicd, "env":env_obj})
+
+
+    env_obj = InfraServiceInfo.objects.order_by("-id")
+    return render(request, "manageenv.html", {"env": env_obj})
 
 
 def infraCompute(request):
 
-
+    # import ipdb; ipdb.set_trace()
     form = InfraForm()
 
     if request.method == "POST":
         form = InfraForm(request.POST)
 
         if form.is_valid():
-            form.save(commit=True)
-
+            current_form = form.save(commit=False)
             app_name = form.data['app_name']
+            app_id = AppsDescription.objects.get(name=app_name).id
+            current_form.app_id = app_id
+            current_form.save()
+
+
             env_name = form.data['env_name']
             new_env_name = ''.join(env_name.split())
 
-
-            app_id = AppsDescription.objects.get(name=app_name).id
             env_id = InfraServiceInfo.objects.get(env_name=env_name).id
 
             request.session['app_name'] = app_name
@@ -256,6 +273,7 @@ def infraCompute(request):
             request.session['env_name'] = new_env_name
             request.session['ins_type'] = form.data['instance_type']
             request.session['env_desc'] = form.data['description']
+
 
             try:
                 aws_home_folder_location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=app_id,
@@ -275,6 +293,8 @@ def infraCompute(request):
                      env_id,
                      aws_home_folder_location)
 
+            subprocess.call(['/home/ec2-user/terraform-app.sh', aws_home_folder_location, 'ec2' ])
+
             return HttpResponseRedirect(reverse("aws:infradb"))
 
     return render(request, "infraservice.html", {'form': form})
@@ -290,7 +310,9 @@ def infradatabase(request):
         form = InfraDatabase(request.POST)
 
         if form.is_valid():
-            form.save(commit=True)
+            current_form = form.save(commit=False)
+            current_form.env_id = request.session['env_id']
+            current_form.save()
 
             location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=request.session['app_id'],
                                                              ei=request.session['env_id'],
@@ -300,6 +322,8 @@ def infradatabase(request):
                     form.data['password'], request.session['app_name'],
                     request.session['env_name'], request.session['env_id'],
                     location)
+
+            subprocess.call(['/home/ec2-user/terraform-app.sh', location, 'rds'])
 
             return HttpResponseRedirect(reverse("aws:infracicd"))
 
@@ -318,7 +342,9 @@ def infracicd(request):
         form = InfraCicds(request.POST)
 
         if form.is_valid():
-            form.save(commit=True)
+            current_form = form.save(commit=False)
+            current_form.app_id = request.session['app_id']
+            current_form.save()
 
             location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=request.session['app_id'],
                                                              ei=request.session['env_id'],
@@ -327,9 +353,10 @@ def infracicd(request):
                       request.session['env_name'], request.session['env_id'],
                       form.data['name'], location)
 
+            subprocess.call(['/home/ec2-user/terraform-app.sh', location, 'cicd'])
+            subprocess.call(['/home/ec2-user/terraform-app.sh', location, 'create'])
 
-
-        return HttpResponseRedirect(reverse("aws:createenv"))
+        return HttpResponseRedirect(reverse("aws:manageenv"))
 
     else:
         form = InfraCicds()
@@ -356,4 +383,16 @@ def createmigrations(request):
 
 
 def managemigrations(request):
-    return render(request, "managemigrations.html")
+
+    resp = CreateMigrations.objects.all()
+    return render(request, "managemigrations.html", {"migrate": resp})
+
+
+def filter_env_names(request):
+    app_name = request.GET.get('app_name', None)
+    app_id = AppsDescription.objects.get(name=app_name).id
+    data = {
+        'env_names': InfraServiceInfo.objects.filter(app_id=app_id).all()
+    }
+
+    return JsonResponse(data)

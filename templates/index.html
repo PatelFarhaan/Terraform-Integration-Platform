@@ -11,10 +11,13 @@
       <div class="row">
 
               <div class="flip-card">
+                <a href="{% url 'aws:createapp' %}">
              <div class="flip-card-inner">
                <div class="flip-card-front">
+
                  <h1>MANAGE</h1>
                  <p>APPS</p>
+
 
                </div>
                <div class="flip-card-back">
@@ -22,9 +25,11 @@
 
                </div>
              </div>
+             </a>
             </div>
 
             <div class="flip-card">
+              <a href="{% url 'aws:createenv' %}">
            <div class="flip-card-inner">
              <div class="flip-card-front">
                <h1>INFRA</h1>
@@ -37,9 +42,11 @@
                <p>INFRA SERVICES</p>
              </div>
            </div>
+           </a>
           </div>
 
           <div class="flip-card">
+            <a href="{% url 'aws:createmigrations' %}">
             <div class="flip-card-inner">
               <div class="flip-card-front">
                 <h1>MIGRATION</h1>
@@ -51,6 +58,7 @@
              <p>MIGRATION SERVICES</p>
            </div>
          </div>
+         </a>
         </div>
 
 

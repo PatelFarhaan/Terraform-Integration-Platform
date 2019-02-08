@@ -12,9 +12,10 @@ class DashboardForm(forms.ModelForm):
 
 
 class InfraForm(forms.ModelForm):
+
     class Meta():
         model = InfraServiceInfo
-        fields = '__all__'
+        exclude = ['app_id']
 
 
 
@@ -22,14 +23,14 @@ class InfraDatabase(forms.ModelForm):
 
     class Meta():
         model = InfraDatabases
-        fields = '__all__'
+        exclude = ['env_id']
 
 
 class InfraCicds(forms.ModelForm):
 
     class Meta():
         model = InfraCicd
-        fields = '__all__'
+        exclude = ['app_id']
 
 
 class CreateMigrationForm(forms.ModelForm):
