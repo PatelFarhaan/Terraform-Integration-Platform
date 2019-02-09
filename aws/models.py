@@ -94,21 +94,21 @@ def aws_list_conf_api_call2():
 
 
 class AppsDescription(db.Model):
-    # aws_response = aws_list_conf_api_call()
-    # server_response = aws_server_list_conf()
-    #
-    # SERVER_CHOICES = []
-    #
-    # for i in server_response:
-    #     SERVER_CHOICES.append(('{lower}'.format(lower=i), '{upper}'.format(upper=i)), )
-    #
-    # CHOICES = [("yes", "YES"),
-    #            ("no", "NO")]
-    # OPTIONS = list()
-    #
-    # for apps in aws_response:
-    #     OPTIONS.append(('{name1}'.format(name1=apps), '{name2}'.format(name2=apps)), )
-    #
+    aws_response = aws_list_conf_api_call()
+    server_response = aws_server_list_conf()
+
+    SERVER_CHOICES = []
+
+    for i in server_response:
+        SERVER_CHOICES.append(('{lower}'.format(lower=i), '{upper}'.format(upper=i)), )
+
+    CHOICES = [("yes", "YES"),
+               ("no", "NO")]
+    OPTIONS = list()
+
+    for apps in aws_response:
+        OPTIONS.append(('{name1}'.format(name1=apps), '{name2}'.format(name2=apps)), )
+
     name = db.CharField(max_length=256, unique=True)
     description = db.TextField()
     plan_to_migrate = db.CharField(max_length=256)
@@ -131,39 +131,39 @@ class StaticData(db.Model):
 
 class InfraServiceInfo(db.Model):
 
-    # AppsDescription_names = AppsDescription.objects.all()
-    # ins_choice = StaticData.objects.all()
-    # aws_response = aws_list_conf_api_call2()
-    # DESC_CHOICES = list()
-    #
-    #
-    # for i in ins_choice:
-    #     global STACK_CHOICE, INS_CHOICES, INS_TYPE
-    #     STACK_CHOICE = i.stack
-    #     INS_CHOICES = i.instance_number
-    #     INS_TYPE = i.instance_type
-    #
-    #
-    # VIEW_APP_CHOICES = list()
-    # VIEW_DESC_CHOICES = list()
-    # VIEW_NO_INS_CHOICES = []
-    # VIEW_STACK_CHOICES = []
-    # VIEW_INS_TYPE = []
-    #
-    #
-    # for i in aws_response:
-    #     DESC_CHOICES.append(i["description"])
-    #
-    #
-    # for app_names in AppsDescription_names:
-    #     VIEW_APP_CHOICES.append(('{}'.format(app_names.name), '{}'.format(app_names.name)), )
-    # for app_names in INS_CHOICES:
-    #     VIEW_NO_INS_CHOICES.append(("{}".format(app_names), "{}".format(app_names)))
-    # for app_names in STACK_CHOICE:
-    #     VIEW_STACK_CHOICES.append(("{}".format(app_names), "{}".format(app_names)))
-    # for app_names in INS_TYPE:
-    #     VIEW_INS_TYPE.append(("{}".format(app_names), "{}".format(app_names)))
-    #
+    AppsDescription_names = AppsDescription.objects.all()
+    ins_choice = StaticData.objects.all()
+    aws_response = aws_list_conf_api_call2()
+    DESC_CHOICES = list()
+
+
+    for i in ins_choice:
+        global STACK_CHOICE, INS_CHOICES, INS_TYPE
+        STACK_CHOICE = i.stack
+        INS_CHOICES = i.instance_number
+        INS_TYPE = i.instance_type
+
+
+    VIEW_APP_CHOICES = list()
+    VIEW_DESC_CHOICES = list()
+    VIEW_NO_INS_CHOICES = []
+    VIEW_STACK_CHOICES = []
+    VIEW_INS_TYPE = []
+
+
+    for i in aws_response:
+        DESC_CHOICES.append(i["description"])
+
+
+    for app_names in AppsDescription_names:
+        VIEW_APP_CHOICES.append(('{}'.format(app_names.name), '{}'.format(app_names.name)), )
+    for app_names in INS_CHOICES:
+        VIEW_NO_INS_CHOICES.append(("{}".format(app_names), "{}".format(app_names)))
+    for app_names in STACK_CHOICE:
+        VIEW_STACK_CHOICES.append(("{}".format(app_names), "{}".format(app_names)))
+    for app_names in INS_TYPE:
+        VIEW_INS_TYPE.append(("{}".format(app_names), "{}".format(app_names)))
+
     app_name = db.CharField(max_length=1000)
     env_name = db.CharField(max_length=1000, unique=True)
     stack = db.CharField(max_length=1000)
@@ -238,22 +238,22 @@ class InfraCicd(db.Model):
 
 class CreateMigrations(db.Model):
 
-    # app_names = AppsDescription.objects.all()
-    # VIEW_APP_CHOICES = []
-    # for app_name in app_names:
-    #     VIEW_APP_CHOICES.append(('{}'.format(app_name.name), '{}'.format(app_name.name)), )
-    #
-    # env_names = InfraServiceInfo.objects.all()
-    # VIEW_ENV_CHOICES = []
-    # for app_names in env_names:
-    #     VIEW_ENV_CHOICES.append(('{}'.format(app_names.env_name), '{}'.format(app_names.env_name)), )
-    #
-    # db_names = InfraDatabases.objects.all()
-    # VIEW_DB_CHOICES = []
-    # for app_names in db_names:
-    #     VIEW_DB_CHOICES.append(('{}'.format(app_names.engine), '{}'.format(app_names.engine)), )
-    #
-    #
+    app_names = AppsDescription.objects.all()
+    VIEW_APP_CHOICES = []
+    for app_name in app_names:
+        VIEW_APP_CHOICES.append(('{}'.format(app_name.name), '{}'.format(app_name.name)), )
+
+    env_names = InfraServiceInfo.objects.all()
+    VIEW_ENV_CHOICES = []
+    for app_names in env_names:
+        VIEW_ENV_CHOICES.append(('{}'.format(app_names.env_name), '{}'.format(app_names.env_name)), )
+
+    db_names = InfraDatabases.objects.all()
+    VIEW_DB_CHOICES = []
+    for app_names in db_names:
+        VIEW_DB_CHOICES.append(('{}'.format(app_names.engine), '{}'.format(app_names.engine)), )
+
+
     app_name = db.CharField(max_length=1000)
     env_name = db.CharField(max_length=1000)
     destination_db = db.CharField(max_length=1000)
