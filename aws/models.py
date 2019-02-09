@@ -172,6 +172,7 @@ class InfraServiceInfo(db.Model):
     instance_type = db.CharField(choices=VIEW_INS_TYPE, max_length=256)
     ssh_location = db.GenericIPAddressField(default='192.168.1.2')
     app_id = db.CharField(max_length=1000, null=True)
+    output_json_status = db.CharField(max_length=10000, blank=True, default="Pending")
 
     def __str__(self):
         return self.app_name
@@ -272,6 +273,8 @@ class Ec2(db.Model):
     ec2_environment = db.CharField(max_length=1000)
     ec2_appname = db.CharField(max_length=1000)
     ec2_environment_id = db.CharField(max_length=1000)
+    ec2_public_dns = db.CharField(max_length=10000, blank=True)
+    ec2_dns = db.CharField(max_length=10000, blank=True)
 
     def __str__(self):
         return self.ec2_appname
@@ -287,6 +290,9 @@ class Rds(db.Model):
     rds_appname = db.CharField(max_length=1000)
     rds_environment = db.CharField(max_length=1000)
     rds_environment_id = db.CharField(max_length=1000)
+    rds_database = db.CharField(max_length=10000, blank=True)
+    rds_endpoint = db.CharField(max_length=10000, blank=True)
+    rds_json_username = db.CharField(max_length=10000, blank=True)
 
     def __str__(self):
         return self.rds_environment
@@ -299,6 +305,9 @@ class Cicd(db.Model):
     env_name = db.CharField(max_length=1000)
     cicd_env_id = db.CharField(max_length=1000)
     s3_artifact_bucket = db.CharField(max_length=1000)
+    cicd_artifact = db.CharField(max_length=10000, blank=True)
+    cicd_repo_http =db.CharField(max_length=10000, blank=True)
+    cicd_repo_ssh = db.CharField(max_length=10000, blank=True)
 
     def __str__(self):
         return self.cicd_appname

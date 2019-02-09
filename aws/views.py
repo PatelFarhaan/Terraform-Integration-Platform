@@ -206,7 +206,7 @@ def manageapp(request):
         AppsDescription.objects.filter(name=app_name).first().delete()
 
 
-    apps = AppsDescription.objects.order_by("-id")
+    apps = AppsDescription.objects.filter(plan_to_migrate="yes").all().order_by("-id")
     return render(request, "manageapp.html", {"apps":apps})
 
 
@@ -238,6 +238,50 @@ def manageenv(request):
         ec2 = Ec2.objects.all()
         rds = Rds.objects.all()
         cicd = Cicd.objects.all()
+
+
+
+        status_result = None
+        try:
+            status_result = json.loads(open(path+"failure_apply.json", "r").read())['status']
+        except:
+            status_result = json.loads(open(path+"success_apply.json", "r").read())['status']
+
+        if status_result == 'success':
+
+            InfraServiceInfo.objects.filter(id=env_id).update(output_json_status=status_result)
+
+            file_output_json = 'output.json'
+            f3 = json.loads(open(path + file_output_json, "r").read())
+
+            cicd_artifact = f3['CICD_Artifact Bucket']['value']
+            cicd_repo_http = f3['CICD_Repo HTTP URL']['value']
+            cicd_repo_ssh = f3['CICD_Repo SSH URL']['value']
+            ec2_elb_dns = f3['EC2_ELB Public Dns']['value']
+            ec2_public_dns = f3['EC2_Server Public DNS']['value']
+            rds_database = f3['RDS_Database Name']['value']
+            rds_endpoint = f3['RDS_Endpoint']['value']
+            rds_username = f3['RDS_User Name']['value']
+
+            ec2_obj = Ec2.objects.all()
+            for i in ec2_obj:
+                id1 = i.id
+            Ec2.objects.filter(id=id1).update(ec2_public_dns=ec2_public_dns,
+                                              ec2_dns=ec2_elb_dns)
+
+            rds_obj = Rds.objects.all()
+            for i in rds_obj:
+                id2 = i.id
+            Rds.objects.filter(id=id2).update(rds_database=rds_database,
+                                              rds_endpoint=rds_endpoint,
+                                              rds_json_username=rds_username)
+
+            cicd_obj = Cicd.objects.all()
+            for i in cicd_obj:
+                id3 = i.id
+            Cicd.objects.filter(id=id3).update(cicd_artifact=cicd_artifact,
+                                               cicd_repo_http=cicd_repo_http,
+                                               cicd_repo_ssh=cicd_repo_ssh)
 
         return render(request, "manageenv.html", {"ec2":ec2, "rds":rds, "cicd":cicd, "env":env_obj})
 

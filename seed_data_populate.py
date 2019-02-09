@@ -7,7 +7,7 @@ django.setup()
 ####################################################################################
 
 
-from aws.models import StaticData, AppsDescription, InfraServiceInfo
+from aws.models import StaticData, AppsDescription, InfraServiceInfo, Ec2
 
 
 def populate_Seed_data():
@@ -31,16 +31,13 @@ def populate_Seed_data():
 
 def query():
 
-    # obj = AppsDescription.objects.get(name='first_app')
-    # print(obj.id)
-    #
-    # # obj2 = InfraServiceInfo.objects.filter(app_id=id).all()
-    # # for j in obj2:
-    # #     print(j.description)
-
-    obj = InfraServiceInfo.objects.order_by('-id')
+    obj = Ec2.objects.all()
     for i in obj:
-        print(i.ssh_location)
+        id = i.id
+
+
+    obj2 = Ec2.objects.filter(id=id).update(ec2_count=2, ec2_ami='kahsbd')
+
 
 if __name__ == '__main__':
     populate_Seed_data()

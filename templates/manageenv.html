@@ -13,11 +13,8 @@
     <tr>
       <th>Env ID</th>
       <th>Env Name</th>
-      <th>Stack</th>
       <th>Description</th>
-      <th>No of Ins</th>
-      <th>Ins Type</th>
-      <th>SSH Location</th>
+      <th>Status</th>
       <th>Action</th>
     </tr>
 
@@ -27,11 +24,8 @@
 
       <td>{{ app.id }}</td>
       <td>{{ app.env_name }}</td>
-      <td>{{ app.stack }}</td>
       <td>{{ app.description }}</td>
-      <td>{{ app.no_of_instance }}</td>
-      <td>{{ app.instance_type }}</td>
-      <td>{{ app.ssh_location }}</td>
+      <td>{{ app.output_json_status }}</td>
       <td>
         <form  method="POST" >
           {% csrf_token %}
@@ -58,6 +52,8 @@
       <th>AMI</th>
       <th>Env</th>
       <th>App name</th>
+      <th>ELB Public Dns</th>
+      <th>Server Public DNS</th>
     </tr>
 
     {% for app in ec2 %}
@@ -68,6 +64,8 @@
       <td>{{ app.ec2_ami }}</td>
       <td>{{ app.ec2_environment }}</td>
       <td>{{ app.ec2_appname }}</td>
+      <td>{{ app.ec2_dns }}</td>
+      <td>{{ app.ec2_public_dns }}</td>
 
 
     </tr>
@@ -90,6 +88,9 @@
       <th>User name</th>
       <th>App name</th>
       <th>Env</th>
+      <th>Database Name</th>
+      <th>Endpoint</th>
+      <th>User Name</th>
     </tr>
 
     {% for app in rds %}
@@ -101,6 +102,9 @@
       <td>{{ app.rds_username }}</td>
       <td>{{ app.rds_appname }}</td>
       <td>{{ app.rds_environment }}</td>
+      <td>{{ app.rds_database }}</td>
+      <td>{{ app.rds_endpoint }}</td>
+      <td>{{ app.rds_json_username }}</td>
 
 
     </tr>
@@ -120,6 +124,9 @@
       <th>Repo Name</th>
       <th>Env Name</th>
       <th>Artifact Bucket</th>
+      <th>CICD Artifact Bucket</th>
+      <th>Repo HTTP URL</th>
+      <th>Repo SSH URL</th>
     </tr>
 
     {% for app in cicd %}
@@ -129,6 +136,9 @@
       <td>{{ app.repo_name }}</td>
       <td>{{ app.env_name }}</td>
       <td>{{ app.s3_artifact_bucket }}</td>
+      <td>{{ app.cicd_artifact }}</td>
+      <td>{{ app.cicd_repo_http }}</td>
+      <td>{{ app.cicd_repo_ssh }}</td>
 
 
     </tr>

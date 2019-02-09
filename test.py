@@ -1,1 +1,9 @@
-os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh /home/ec2-user/93/9/testing-phase ec2'))
+import json
+
+status_result = None
+try:
+    status_result = json.loads(open("failure_apply.json", "r").read())['status']
+except:
+    status_result = json.loads(open("success_apply.json", "r").read())['status']
+
+print(status_result)
