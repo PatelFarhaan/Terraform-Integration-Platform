@@ -49,23 +49,23 @@
 
 {% block content %}
 
-<ol class="progress" data-steps="4">
+<a href="{% url 'aws:createenv' %}"><button class="button2">Create ENV</button></a>
+<a href="{% url 'aws:manageenv' %}"><button class="button2">Manage ENV</button></a>
+
+<ol class="progress" data-steps="3">
     <li class="active">
         <span class="name">Compute</span>
         <span class="step"><span>1</span></span>
     </li>
-    <li class="done">
+    <li class="">
         <span class="name">Database</span>
         <span class="step"><span>2</span></span>
     </li>
-    <li class="done">
+    <li class="">
         <span class="name">CICD</span>
         <span class="step"><span>3</span></span>
     </li>
-    <li>
-        <span class="name">Quux</span>
-        <span class="step"><span>4</span></span>
-    </li>
+
 </ol>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
