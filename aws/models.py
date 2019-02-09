@@ -164,12 +164,12 @@ class InfraServiceInfo(db.Model):
     for app_names in INS_TYPE:
         VIEW_INS_TYPE.append(("{}".format(app_names), "{}".format(app_names)))
 
-    app_name = db.CharField(max_length=1000)
+    app_name = db.CharField(choices=VIEW_APP_CHOICES, max_length=1000)
     env_name = db.CharField(max_length=1000, unique=True)
-    stack = db.CharField(max_length=1000)
+    stack = db.CharField(choices=VIEW_STACK_CHOICES, max_length=1000)
     description = db.TextField(blank=True)
-    no_of_instance = db.CharField(max_length=256)
-    instance_type = db.CharField(max_length=256)
+    no_of_instance = db.CharField(choices=VIEW_NO_INS_CHOICES, max_length=256)
+    instance_type = db.CharField(choices=VIEW_INS_TYPE, max_length=256)
     ssh_location = db.GenericIPAddressField(default='192.168.1.2')
     app_id = db.CharField(max_length=1000, null=True)
 
@@ -254,9 +254,9 @@ class CreateMigrations(db.Model):
         VIEW_DB_CHOICES.append(('{}'.format(app_names.engine), '{}'.format(app_names.engine)), )
 
 
-    app_name = db.CharField(max_length=1000)
-    env_name = db.CharField(max_length=1000)
-    destination_db = db.CharField(max_length=1000)
+    app_name = db.CharField(choices=VIEW_APP_CHOICES, max_length=1000)
+    env_name = db.CharField(choices=VIEW_ENV_CHOICES, max_length=1000)
+    destination_db = db.CharField(choices=VIEW_DB_CHOICES, max_length=1000)
     source_ip = db.GenericIPAddressField(default='192.168.1.2')
     source_username = db.CharField(max_length=1000)
     source_password = db.CharField(max_length=1000)

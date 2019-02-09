@@ -43,5 +43,5 @@ def query():
         print(i.ssh_location)
 
 if __name__ == '__main__':
-    # populate_Seed_data()
-    query()
+    populate_Seed_data()
+    # query()
