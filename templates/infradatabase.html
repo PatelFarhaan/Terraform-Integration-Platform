@@ -55,33 +55,22 @@
 <a href="{% url 'aws:createenv' %}"><button class="button2">Create ENV</button></a>
 <a href="{% url 'aws:manageenv' %}"><button class="button2">Manage ENV</button></a>
 
-<ol class="progress" data-steps="3">
-    <li class="done">
-        <span class="name">Compute</span>
-        <span class="step"><span>1</span></span>
-    </li>
-    <li class="active">
-        <span class="name">Database</span>
-        <span class="step"><span>2</span></span>
-    </li>
-    <li class="">
-        <span class="name">CICD</span>
-        <span class="step"><span>3</span></span>
-    </li>
+<p>&nbsp;</p>
+<ul class="progressbar">
+  <li class="done">Compute</li>
+  <li class="active">Database</li>
+  <li>CICD</li>
+</ul>
 
-</ol>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+<h2 style="background-color:skyblue;margin-bottom: 20px;padding: 15px;width: 80%">Create Database</h2>
    <form method="POST">
        {% csrf_token %}
        {{form.as_p}}
-       <input type="submit" value="submit">
+       <input type="submit" value="Next Step">
    </form>
-
    <p>&nbsp;</p>
-
    <p>&nbsp;</p>
-
+   <p>&nbsp;</p>
    {% endblock %}

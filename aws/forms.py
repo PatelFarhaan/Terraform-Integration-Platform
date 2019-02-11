@@ -15,7 +15,7 @@ class InfraForm(forms.ModelForm):
 
     class Meta():
         model = InfraServiceInfo
-        exclude = ['app_id']
+        exclude = ['app_id', 'output_json_status']
 
 
 

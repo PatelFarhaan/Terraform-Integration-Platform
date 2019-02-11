@@ -228,13 +228,242 @@ margin: 15px;
 
 
 
+/*!
+ * Start Bootstrap - Small Business (https://startbootstrap.com/template-overviews/small-business)
+ * Copyright 2013-2017 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-small-business/blob/master/LICENSE)
+ */
+
+
+ html {
+  position: relative;
+  min-height: 100%;
+}
+
+
+ @media (min-width: 992px) {
+  body {
+    padding-top: 20px;
+  }
+}
+
+body {
+  padding-top: 20px;
+  font-family: Helvetica Neue;
+}
+
+nav{
+  font-family: Helvetica Neue;
+  background-color: #2e8dde;
+}
+
+
+footer{
+  background-color: #2e8dde;
+  position:absolute;
+  bottom: 0;
+  height: 60px;
+  width: 100%;
+  text-align: right;
+  padding: 20px 0;
+
+}
+
+
+/* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
+.flip-card {
+
+margin: 15px;
+ position: relative;
+ margin-top: 170px;
+ margin-left: 50px;
+ background-color: transparent;
+ width: 300px;
+ height: 500px;
+ border: 1px solid #f1f1f1;
+
+}
+
+/* This container is needed to position the front and back side */
+.flip-card-inner {
+ position: relative;
+ width: 100%;
+ height: 100%;
+ text-align: center;
+ transition: transform 0.8s;
+ transform-style: preserve-3d;
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.flip-card:hover .flip-card-inner {
+ transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.flip-card-front, .flip-card-back {
+ position: absolute;
+ width: 100%;
+ height: 100%;
+ backface-visibility: hidden;
+}
+
+/* Style the front side (fallback if image is missing) */
+.flip-card-front {
+ background-color: #bbb;
+ color: black;
+}
+
+/* Style the back side */
+.flip-card-back {
+ background-color: dodgerblue;
+ color: white;
+ transform: rotateY(180deg);
+}
+
+#id_app_names{
+  list-style: none;
+}
+
+
+
+/*custom font*/
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+
+/*form styles*/
+#msform {
+	width: 400px;
+	margin: 50px auto;
+	text-align: center;
+	position: relative;
+}
+#msform fieldset {
+	background: white;
+	border: 0 none;
+	border-radius: 3px;
+	box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+	padding: 20px 30px;
+	box-sizing: border-box;
+	width: 80%;
+	margin: 0 10%;
+
+	/*stacking fieldsets above each other*/
+	position: relative;
+}
+/*Hide all except first fieldset*/
+#msform fieldset:not(:first-of-type) {
+	display: none;
+}
+/*inputs*/
+#msform input, #msform textarea {
+	padding: 15px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	margin-bottom: 10px;
+	width: 100%;
+	box-sizing: border-box;
+	font-family: montserrat;
+	color: #2C3E50;
+	font-size: 13px;
+}
+/*buttons*/
+#msform .action-button {
+	width: 100px;
+	background: #27AE60;
+	font-weight: bold;
+	color: white;
+	border: 0 none;
+	border-radius: 1px;
+	cursor: pointer;
+	padding: 10px 5px;
+	margin: 10px 5px;
+}
+#msform .action-button:hover, #msform .action-button:focus {
+	box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+}
+/*headings*/
+.fs-title {
+	font-size: 15px;
+	text-transform: uppercase;
+	color: #2C3E50;
+	margin-bottom: 10px;
+}
+.fs-subtitle {
+	font-weight: normal;
+	font-size: 13px;
+	color: #666;
+	margin-bottom: 20px;
+}
+/*progressbar* /
+#progressbar {
+	margin-bottom: 30px;
+	overflow: hidden;
+	/*CSS counters to number the steps* /
+	counter-reset: step;
+}
+#progressbar li {
+	list-style-type: none;
+	color: white;
+	text-transform: uppercase;
+	font-size: 9px;
+	width: 33.33%;
+	float: left;
+	position: relative;
+}
+#progressbar li:before {
+	content: counter(step);
+	counter-increment: step;
+	width: 20px;
+	line-height: 20px;
+	display: block;
+	font-size: 10px;
+	color: #333;
+	background: white;
+	border-radius: 3px;
+	margin: 0 auto 5px auto;
+}
+/*progressbar connectors* /
+#progressbar li:after {
+	content: '';
+	width: 100%;
+	height: 2px;
+	background: white;
+	position: absolute;
+	left: -50%;
+	top: 9px;
+	z-index: -1; /*put it behind the numbers* /
+}
+#progressbar li:first-child:after {
+	/*connector not needed before the first step* /
+	content: none;
+}
+/*marking active/completed steps green* /
+/*The number of the step and the connector before it = green* /
+#progressbar li.active:before,  #progressbar li.active:after{
+	background: #27AE60;
+	color: white;
+}
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
 label { color: #B4886B; font-weight: bold; display: block; width: 150px; float: left; }
 label:after { content: ": " }
 
 input, textarea, select {
     width: 285px;
     height: 30px;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
     padding-left:10px;
     font-size: 15px;
     background:#fff;
@@ -260,10 +489,17 @@ input[type="button"], input[type="submit"] {
     border-radius: 5px;
     cursor: pointer;
     outline:0;
-    float: right;
+    float: left;
+    margin-left:150px;
   }
 
-  /* Progress Tracker v2 */
+form {
+    display: block;
+    margin-bottom: 50px;;
+}
+
+
+  /* Progress Tracker v2 * /
 ol.progress[data-steps="2"] li { width: 49%; }
 ol.progress[data-steps="3"] li { width: 33%; }
 ol.progress[data-steps="4"] li { width: 24%; }
@@ -274,8 +510,8 @@ ol.progress[data-steps="8"] li { width: 12%; }
 ol.progress[data-steps="9"] li { width: 11%; }
 
 .progress {
-    width: 100%;
-    list-style: none;
+    width: 80%;
+    list-style: none !important;
     list-style-image: none;
     margin: 20px 0 20px 0;
     padding: 0;
@@ -291,7 +527,7 @@ ol.progress[data-steps="9"] li { width: 11%; }
     display: block;
     vertical-align: bottom;
     text-align: center;
-    /*margin-bottom: 1em;*/
+    /*margin-bottom: 1em;* /
     color: black;
     opacity: 0.3;
 }
@@ -299,8 +535,8 @@ ol.progress[data-steps="9"] li { width: 11%; }
 .progress .step {
     color: black;
     border: 3px solid silver;
-    /*background-color: silver;*/
-    border-radius: 50%;
+    /*background-color: silver;* /
+    border-radius: 50% !important;
     line-height: 1.2;
     width: 1.2em;
     height: 1.2em;
@@ -342,22 +578,86 @@ ol.progress[data-steps="9"] li { width: 11%; }
 }
 
 .progress li:first-of-type .step:before {
-    display: none;
+    display: none !important;
 }
 
 .progress li:last-of-type .step:after {
-    display: none;
+    display: none !important;
 }
 
 .progress .done .step:before,
 .progress .done .step:after,
 .progress .active .step:before {
-    background-color: yellowgreen;
+    background-color: yellowgreen !important;
 }
 
 
 
 .progress .done .step,
 .progress .active .step {
-    border: 3px solid yellowgreen;
+    border: 3px solid yellowgreen !important;
+}
+*/
+
+.progressbar {
+  margin: 0;
+  padding: 0;
+  counter-reset: step;
+   clear:both;
+}
+.progressbar li {
+  list-style-type: none;
+  width: 25%;
+  float: left;
+  font-size: 12px;
+  font-weight:bold;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  color: #7d7d7d;
+}
+.progressbar li:before {
+  width: 30px;
+  height: 30px;
+  content: counter(step);
+  counter-increment: step;
+  line-height: 30px;
+  border: 2px solid #7d7d7d;
+  display: block;
+  text-align: center;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  background-color: white;
+}
+.progressbar li:after {
+  width: 100%;
+  height: 2px;
+  content: '';
+  position: absolute;
+  background-color: #7d7d7d;
+  top: 15px;
+  left: -50%;
+  z-index: -1;
+}
+.progressbar li:first-child:after {
+  content: none;
+}
+.progressbar li.active {
+  color: green;
+}
+.progressbar li.active:before {
+  border-color: #55b776;
+}
+/*
+.progressbar li.active + li:after {
+  background-color: #55b776;
+}*/
+.progressbar li.done {
+  color: green;
+}
+.progressbar li.done:before {
+  border-color: #55b776;
+}
+.progressbar li.done + li:after {
+  background-color: #55b776;
 }

@@ -206,7 +206,7 @@ def manageapp(request):
         AppsDescription.objects.filter(name=app_name).first().delete()
 
 
-    apps = AppsDescription.objects.filter(plan_to_migrate="yes").all().order_by("-id")
+    apps = AppsDescription.objects.order_by("-id")
     return render(request, "manageapp.html", {"apps":apps})
 
 
@@ -240,12 +240,11 @@ def manageenv(request):
         cicd = Cicd.objects.all()
 
 
-
         status_result = None
         try:
-            status_result = json.loads(open(path+"failure_apply.json", "r").read())['status']
+            status_result = json.loads(open("failure_apply.json", "r").read())['status']
         except:
-            status_result = json.loads(open(path+"success_apply.json", "r").read())['status']
+            status_result = json.loads(open("success_apply.json", "r").read())['status']
 
         if status_result == 'success':
 
@@ -285,8 +284,11 @@ def manageenv(request):
 
         return render(request, "manageenv.html", {"ec2":ec2, "rds":rds, "cicd":cicd, "env":env_obj})
 
+    else:
 
-    env_obj = InfraServiceInfo.objects.order_by("-id")
+        env_obj = InfraServiceInfo.objects.order_by("-id")
+        # a refresh button on status to get the id of the element
+
     return render(request, "manageenv.html", {"env": env_obj})
 
 
@@ -431,21 +433,6 @@ def managemigrations(request):
     resp = CreateMigrations.objects.all()
     return render(request, "managemigrations.html", {"migrate": resp})
 
-
-# def filter_env_names(request):
-#
-#     app_name = request.GET.get('app_name', None)
-#     resp = InfraServiceInfo.objects.filter(app_id=AppsDescription.objects.get(name=app_name).id).all()
-#     data = dict()
-#     list = []
-#     for i in resp:
-#         list.append(i.env_name)
-#
-#     print(list)
-
-    # data = json.loads(data)
-    # data = str(data)
-    # return JsonResponse(json.dumps(data), safe=False)
 
 
 def filter_env_names(request):
