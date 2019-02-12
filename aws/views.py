@@ -468,7 +468,7 @@ def infracicd(request):
 
 def createmigrations(request):
 
-    import ipdb; ipdb.set_trace()
+    # import ipdb; ipdb.set_trace()
     form = CreateMigrationForm()
 
     if request.method == "POST":
@@ -476,22 +476,21 @@ def createmigrations(request):
 
         if form.is_valid():
             form.save(commit=True)
+            print("jasbdjl")
 
-            ai = AppsDescription.objects.get(name=form.data['app_name']).id
-            ei = InfraServiceInfo.objects.get(env_name=form.data['env_name']).id
-            en = form.data['env_name']
-
-            location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=ai,
-                                                              ei=ei,
-                                                              en=en)
-            dms_json(form.data['app_name'], en, ei, form.data['source_ip'],
-                     '3306', form.data['source_username'],
-                     form.data['source_password'], form.data['engine_name'], location)
-
-
-            os.system('echo %s|sudo -S %s' % (None, 'sh terraform-app.sh /home/ec2-user/1001/1/dev dms'))
-            print("asdasd")
-
+            # ai = AppsDescription.objects.get(name=form.data['app_name']).id
+            # ei = InfraServiceInfo.objects.get(env_name=form.data['env_name']).id
+            # en = form.data['env_name']
+            #
+            # location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=ai,
+            #                                                   ei=ei,
+            #                                                   en=en)
+            # dms_json(form.data['app_name'], en, ei, form.data['source_ip'],
+            #          '3306', form.data['source_username'],
+            #          form.data['source_password'], form.data['engine_name'], location)
+            #
+            #
+            # os.system('echo %s|sudo -S %s' % (None, 'sh terraform-app.sh /home/ec2-user/1001/1/dev dms'))
 
         return HttpResponseRedirect(reverse('aws:managemigrations'))
 
@@ -511,7 +510,8 @@ def managemigrations(request):
 def filter_env_names(request):
 
     appname = request.GET.get('appname', None)
-    datas = InfraServiceInfo.objects.filter(app_name=appname).all()
+    ap_id = AppsDescription.objects.get(id=appname)
+    datas = InfraServiceInfo.objects.filter(app_name=ap_id).all()
     data = list()
     for i in datas:
         data.append(i.env_name)

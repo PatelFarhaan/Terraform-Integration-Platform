@@ -239,36 +239,35 @@ class InfraCicd(db.Model):
 
 class CreateMigrations(db.Model):
 
-    app_names = AppsDescription.objects.all()
-    VIEW_APP_CHOICES = []
-    for app_name in app_names:
-        VIEW_APP_CHOICES.append(('{}'.format(app_name.name), '{}'.format(app_name.name)), )
-
-    env_names = []
-    app_names = AppsDescription.objects.all()
-    app_name_list = []
-    for i in app_names:
-        app_name_list.append(i.name)
-    for j in app_name_list:
-        data = InfraServiceInfo.objects.filter(app_name=j).all()
-        for v in data:
-            env_names.append(v.env_name)
-
-    VIEW_ENV_CHOICES = []
-    for names in env_names:
-        VIEW_ENV_CHOICES.append(('{}'.format(names), '{}'.format(names)), )
-
-    db_names = InfraDatabases.objects.all()
-    VIEW_DB_CHOICES = []
-    for app_names in db_names:
-        VIEW_DB_CHOICES.append(('{}'.format(app_names.engine), '{}'.format(app_names.engine)), )
-
+    # app_names = AppsDescription.objects.all()
+    # VIEW_APP_CHOICES = []
+    # for app_name in app_names:
+    #     VIEW_APP_CHOICES.append(('{}'.format(app_name.name), '{}'.format(app_name.name)), )
+    #
+    # env_names = []
+    # app_names = AppsDescription.objects.all()
+    # app_name_list = []
+    # for i in app_names:
+    #     app_name_list.append(i.name)
+    # for j in app_name_list:
+    #     data = InfraServiceInfo.objects.filter(app_name=j).all()
+    #     for v in data:
+    #         env_names.append(v.env_name)
+    #
+    # VIEW_ENV_CHOICES = []
+    # for names in env_names:
+    #     VIEW_ENV_CHOICES.append(('{}'.format(names), '{}'.format(names)), )
+    #
+    # db_names = InfraDatabases.objects.all()
+    # VIEW_DB_CHOICES = []
+    # for app_names in db_names:
+    #     VIEW_DB_CHOICES.append(('{}'.format(app_names.engine), '{}'.format(app_names.engine)), )
+    #
     ENGINE_NAMES = [('MySQL', 'MySQL'),
                     ('Oracle', 'Oracle')]
 
-
-    app_name = db.CharField(choices=VIEW_APP_CHOICES, max_length=1000)
-    env_name = db.CharField(choices=VIEW_ENV_CHOICES, max_length=1000, blank=True)
+    app_name = db.ForeignKey(AppsDescription, on_delete=db.CASCADE)
+    env_name = db.ForeignKey(InfraServiceInfo, on_delete=db.CASCADE)
     destination_db = db.CharField(max_length=1000, blank=True)
     source_ip = db.GenericIPAddressField(default='192.168.1.2')
     source_username = db.CharField(max_length=1000)
