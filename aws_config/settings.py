@@ -29,7 +29,7 @@ DEBUG = True
 #                  'ec2-54-211-137-255.compute-1.amazonaws.com',
 #                  'localhost:8000']
 #
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.102', 'localhost','0.0.0.0','127.0.0.1']
 
 # Application definition
 

@@ -8,55 +8,6 @@
 
 <p>&nbsp;</p>
 
-
-{% block javascript %}
-<script>
-  /*
-  window.onload = function() {
-    if (window.jQuery) {
-        // jQuery is loaded
-        alert("Yeah!");
-    } else {
-        // jQuery is not loaded
-        alert("Doesn't Work");
-    }
-}*/
-
-  $("#id_appname").change(function () {
-    var appname = $(this).val();
-    //alert(appname);
-
-    $.ajax({
-      url: 'ajax/getenv/',
-      data: {
-        'appname': appname
-      },
-      dataType: 'json',
-      success: function (data) {
-        $('#id_envname')
-              .find('option')
-              .remove()
-              .end()
-              .append('<option value="" selected>---</option>');
-        $.each(data, function(k,v){
-          //alert(k + "= "+ v);
-          $.each(v["fields"], function(key,val){
-            if(key == "name"){
-            $('#id_envname')
-              .append('<option value="' + val +'">'+ val + '</option>');
-              //.val('whatever');
-            }
-            //alert(key + ": " + val);
-          });
-        });
-        //alert(data);
-      }
-    });
-  });
-</script>
-{% endblock %}
-
-
 <form method="POST">
       {{form.as_p}}
       {% csrf_token %}
@@ -78,4 +29,88 @@
 
 
 
+{% endblock %}
+
+
+
+
+{% block javascript %}
+<script>
+/*  window.onload = function() {
+    if (window.jQuery) {
+        // jQuery is loaded
+        //alert("Yeah!");
+    } else {
+        // jQuery is not loaded
+        alert("Doesn't Work");
+    }
+}*/
+
+  $("#id_app_name").change(function () {
+    var appname = $(this).val();
+    //alert(appname);
+
+    $.ajax({
+      url: '/aws/ajax/getenv/',
+      data: {
+        'appname': appname
+      },
+      dataType: 'json',
+      success: function (data) {
+        //alert(data);
+        $('#id_env_name')
+              .find('option')
+              .remove()
+              .end()
+              .append('<option value="" selected>---</option>');
+        $.each(data, function(k,v){
+            $('#id_env_name')
+              .append('<option value="' + v +'">'+ v + '</option>');
+        });
+
+      }
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+  $("#id_env_name").change(function () {
+    var appname = $(this).val();
+    //alert(appname);
+
+    $.ajax({
+      url: '/aws/ajax/getrdsdb/',
+      data: {
+        'appname': appname
+      },
+      dataType: 'text',
+      success: function (data) {
+        //alert(data);
+
+        $('#id_destination_db').val(data);
+
+        //alert(data);
+      }
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
 {% endblock %}

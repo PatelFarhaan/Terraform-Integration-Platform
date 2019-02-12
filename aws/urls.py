@@ -14,5 +14,7 @@ urlpatterns = [
     path('infracicd/', views.infracicd, name="infracicd"),
     path('createmigrations/', views.createmigrations, name="createmigrations"),
     path('managemigrations/', views.managemigrations, name="managemigrations"),
-    path('getenv/', views.filter_env_names, name="getenv"),
+    path('ajax/getenv/', views.filter_env_names, name="getenv"),
+    path('ajax/getstack/', views.name_desc, name="getstack"),
+    path('ajax/getrdsdb/', views.get_rds_db, name="get_rds_db"),
 ]

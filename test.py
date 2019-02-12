@@ -1,21 +1,45 @@
-
-def dms_json(app_name, env_name, env_id, source_ip, port, username, password, enginename, location):
-    data = {
-        "dms_appname":"{}".format(app_name),
-        "dms_envname":"{}".format(env_name),
-        "dms_envid":"{}".format(env_id),
-        "dms_src_servername":"{}".format(source_ip),
-        "dms_src_port":"{}".format(port),
-        "dms_src_username": "{}".format(username),
-        "dms_src_password": "{}".format(password),
-        "dms_src_enginename": "{}".format(enginename)
+resp = {
+    "CICD_Artifact Bucket": {
+        "sensitive": '',
+        "type": "string",
+        "value": "app1-dev-2-artifact"
+    },
+    "CICD_Repo HTTP URL": {
+        "sensitive": '',
+        "type": "string",
+        "value": "https://git-codecommit.us-west-2.amazonaws.com/v1/repos/hack2-dev-2"
+    },
+    "CICD_Repo SSH URL": {
+        "sensitive": '',
+        "type": "string",
+        "value": "ssh://git-codecommit.us-west-2.amazonaws.com/v1/repos/hack2-dev-2"
+    },
+    "EC2_ELB Public Dns": {
+        "sensitive": '',
+        "type": "string",
+        "value": "hack2-dev-2-elb-377121987.us-west-2.elb.amazonaws.com"
+    },
+    "EC2_Server Public DNS": {
+        "sensitive": false,
+        "type": "list",
+        "value": [
+            "ec2-34-215-119-106.us-west-2.compute.amazonaws.com",
+            "ec2-54-218-70-236.us-west-2.compute.amazonaws.com"
+        ]
+    },
+    "RDS_Database Name": {
+        "sensitive": false,
+        "type": "string",
+        "value": "hack2"
+    },
+    "RDS_Endpoint": {
+        "sensitive": false,
+        "type": "string",
+        "value": "i-1-id.cnstrnkzp2jn.us-west-2.rds.amazonaws.com:3306"
+    },
+    "RDS_User Name": {
+        "sensitive": false,
+        "type": "string",
+        "value": "abc"
     }
-
-    json_data = json.dumps(data)
-
-    file = open(location + '/dms.tfvars.json', 'w')
-
-    for i in json_data:
-        file.write(i)
-
-    file.close()
+}

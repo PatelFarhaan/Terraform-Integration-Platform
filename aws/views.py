@@ -512,15 +512,36 @@ def managemigrations(request):
 def filter_env_names(request):
 
     appname = request.GET.get('appname', None)
-    data = list(InfraServiceInfo.objects.filter(app_name=appname).all())
-    print(data)
-    qs_json = serializers.serialize('json', data)
-    return HttpResponse(qs_json, content_type='application/json')
+    datas = InfraServiceInfo.objects.filter(app_name=appname).all()
+    data = list()
+    for i in datas:
+        data.append(i.env_name)
 
+    request.session['appname'] = appname
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def get_rds_db(request):
+
+    appname = request.GET.get('appname', None)
+    app_name = request.session['appname']
+
+    ai = AppsDescription.objects.get(name=app_name).id
+    ei = InfraServiceInfo.objects.get(name=appname).id
+    en = app_name
+
+    location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=ai,
+                                                      ei=ei,
+                                                      en=en)
+
+    file_output_json = '/output.json'
+    f3 = json.loads(open(location + file_output_json, "r").read())
+    data = f3['RDS_Endpoint']['value']
+
+    return HttpResponse(data, content_type='application/text')
 
 def name_desc(request):
 
     appname = request.GET.get('appname', None)
-    data = list(AppsDescription.objects.filter(name=appname).first().description)
-    qs_json = serializers.serialize('json', data)
-    return HttpResponse(qs_json, content_type='application/json')
+    data = StaticData.objects.get(stack=appname).description
+    return HttpResponse(data[0], content_type='application/text')

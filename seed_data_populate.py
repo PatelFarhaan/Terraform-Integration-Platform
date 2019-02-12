@@ -31,8 +31,13 @@ def populate_Seed_data():
 
 def query():
 
-    ans = AppsDescription.objects.get(name='first_app').id
-    print(ans)
+
+    datas = InfraServiceInfo.objects.filter(app_name='first_app').all()
+    data = list()
+    for i in datas:
+        data.append(i.env_name)
+    print(data)
+
 
 if __name__ == '__main__':
     # populate_Seed_data()

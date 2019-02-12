@@ -167,7 +167,7 @@ class InfraServiceInfo(db.Model):
     app_name = db.CharField(choices=VIEW_APP_CHOICES, max_length=1000)
     env_name = db.CharField(max_length=1000, unique=True)
     stack = db.CharField(choices=VIEW_STACK_CHOICES, max_length=1000)
-    description = db.TextField(blank=True)
+    description = db.CharField(max_length=1000, blank=True)
     no_of_instance = db.CharField(choices=VIEW_NO_INS_CHOICES, max_length=256)
     instance_type = db.CharField(choices=VIEW_INS_TYPE, max_length=256)
     ssh_location = db.GenericIPAddressField(default='192.168.1.2')
@@ -244,10 +244,8 @@ class CreateMigrations(db.Model):
     for app_name in app_names:
         VIEW_APP_CHOICES.append(('{}'.format(app_name.name), '{}'.format(app_name.name)), )
 
-    env_names = InfraServiceInfo.objects.all()
-    VIEW_ENV_CHOICES = []
-    for app_names in env_names:
-        VIEW_ENV_CHOICES.append(('{}'.format(app_names.env_name), '{}'.format(app_names.env_name)), )
+
+    VIEW_ENV_CHOICES = [(None,None)]
 
     db_names = InfraDatabases.objects.all()
     VIEW_DB_CHOICES = []
