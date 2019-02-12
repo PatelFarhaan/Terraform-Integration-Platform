@@ -526,17 +526,21 @@ def get_rds_db(request):
     appname = request.GET.get('appname', None)
     app_name = request.session['appname']
 
-    ai = AppsDescription.objects.get(name=app_name).id
-    ei = InfraServiceInfo.objects.get(name=appname).id
-    en = app_name
+    try:
+        ai = AppsDescription.objects.get(name=app_name).id
+        ei = InfraServiceInfo.objects.get(name=appname).id
+        en = app_name
 
-    location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=ai,
-                                                      ei=ei,
-                                                      en=en)
+        location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=ai,
+                                                          ei=ei,
+                                                          en=en)
 
-    file_output_json = '/output.json'
-    f3 = json.loads(open(location + file_output_json, "r").read())
-    data = f3['RDS_Endpoint']['value']
+        file_output_json = '/output.json'
+        f3 = json.loads(open(location + file_output_json, "r").read())
+        data = f3['RDS_Endpoint']['value']\
+
+    except:
+        data = ''
 
     return HttpResponse(data, content_type='application/text')
 
