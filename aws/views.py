@@ -221,8 +221,6 @@ def createapp(request):
 
 def manageapp(request):
 
-    # AppsDescription.objects.all().delete()
-
     if request.method == "POST":
         app_name = request.POST.get('appname')
         AppsDescription.objects.filter(name=app_name).first().delete()
@@ -470,16 +468,17 @@ def infracicd(request):
 
 def createmigrations(request):
 
+    import ipdb; ipdb.set_trace()
     form = CreateMigrationForm()
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CreateMigrationForm(request.POST)
 
         if form.is_valid():
             form.save(commit=True)
 
             ai = AppsDescription.objects.get(name=form.data['app_name']).id
-            ei = InfraServiceInfo.objects.get(name=form.data['env_name']).id
+            ei = InfraServiceInfo.objects.get(env_name=form.data['env_name']).id
             en = form.data['env_name']
 
             location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=ai,
@@ -491,7 +490,7 @@ def createmigrations(request):
 
 
             os.system('echo %s|sudo -S %s' % (None, 'sh terraform-app.sh /home/ec2-user/1001/1/dev dms'))
-
+            print("asdasd")
 
 
         return HttpResponseRedirect(reverse('aws:managemigrations'))
@@ -504,7 +503,7 @@ def createmigrations(request):
 
 def managemigrations(request):
 
-    resp = CreateMigrations.objects.all()
+    resp = CreateMigrations.objects.order_by("-id")
     return render(request, "managemigrations.html", {"migrate": resp})
 
 

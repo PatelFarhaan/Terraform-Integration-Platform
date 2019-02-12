@@ -36,19 +36,21 @@
 
 {% block javascript %}
 <script>
-/*  window.onload = function() {
+  window.onload = function() {
     if (window.jQuery) {
         // jQuery is loaded
         //alert("Yeah!");
+        $('#id_env_name').prop("disabled",true);
     } else {
         // jQuery is not loaded
         alert("Doesn't Work");
     }
-}*/
+}
 
   $("#id_app_name").change(function () {
     var appname = $(this).val();
     //alert(appname);
+    $('#id_env_name').prop("disabled",false);
 
     $.ajax({
       url: '/aws/ajax/getenv/',
