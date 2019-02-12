@@ -264,9 +264,9 @@ def manageenv(request):
 
         status_result = None
         try:
-            status_result = json.loads(open("failure_apply.json", "r").read())['status']
+            status_result = json.loads(open(path+"failure_apply.json", "r").read())['status']
         except:
-            status_result = json.loads(open("success_apply.json", "r").read())['status']
+            status_result = json.loads(open(path+"success_apply.json", "r").read())['status']
 
         if status_result == 'success':
 
@@ -283,6 +283,7 @@ def manageenv(request):
             rds_database = f3['RDS_Database Name']['value']
             rds_endpoint = f3['RDS_Endpoint']['value']
             rds_username = f3['RDS_User Name']['value']
+
 
             ec2_obj = Ec2.objects.all()
             for i in ec2_obj:
@@ -304,7 +305,7 @@ def manageenv(request):
                                                cicd_repo_http=cicd_repo_http,
                                                cicd_repo_ssh=cicd_repo_ssh)
 
-        elif status_result == 'failure':
+        if status_result == 'failed':
 
             cicd_artifact = None
             cicd_repo_http = None
@@ -334,6 +335,7 @@ def manageenv(request):
             Cicd.objects.filter(id=id3).update(cicd_artifact=cicd_artifact,
                                                cicd_repo_http=cicd_repo_http,
                                                cicd_repo_ssh=cicd_repo_ssh)
+
 
         return render(request, "manageenv.html", {"ec2":ec2, "rds":rds, "cicd":cicd, "env":env_obj})
 
