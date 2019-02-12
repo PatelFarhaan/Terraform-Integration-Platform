@@ -14,22 +14,22 @@
 
   <table>
     <tr>
-      <th>Env ID</th>
-      <th>Env Name</th>
-      <th>Description</th>
-      <th>Status</th>
-      <th>Action</th>
+      <th style="text-align:center">Env ID</th>
+      <th style="text-align:center">Env Name</th>
+      <th style="text-align:center">Description</th>
+      <th style="text-align:center">Status</th>
+      <th style="text-align:center">Action</th>
     </tr>
 
     {% for app in env %}
     <tr>
 
 
-      <td>{{ app.id }}</td>
-      <td>{{ app.env_name }}</td>
-      <td>{{ app.description }}</td>
-      <td>{{ app.output_json_status }}</td>
-      <td>
+      <td style="text-align:center">{{ app.id }}</td>
+      <td style="text-align:center">{{ app.env_name }}</td>
+      <td style="text-align:center">{{ app.description }}</td>
+      <td style="text-align:center">{{ app.output_json_status }}</td>
+      <td style="text-align:center">
         <form  method="POST" >
           {% csrf_token %}
           <input type="hidden" name="envid" value="{{app.id}}">
@@ -41,7 +41,8 @@
   </table>
 
 
-
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 
 
 

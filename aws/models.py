@@ -111,7 +111,7 @@ class AppsDescription(db.Model):
 
     name = db.CharField(max_length=256, unique=True)
     description = db.TextField()
-    plan_to_migrate = db.CharField(max_length=256)
+    plan_to_migrate = db.CharField(choices=CHOICES, max_length=256)
     server_names = db.TextField(null=True)
     create_app_response = db.TextField(null=True)
 
@@ -172,7 +172,7 @@ class InfraServiceInfo(db.Model):
     instance_type = db.CharField(choices=VIEW_INS_TYPE, max_length=256)
     ssh_location = db.GenericIPAddressField(default='192.168.1.2')
     app_id = db.CharField(max_length=1000, null=True)
-    output_json_status = db.CharField(max_length=10000, blank=True, default="Pending")
+    output_json_status = db.CharField(max_length=10000, blank=True, default="In Progress")
 
     def __str__(self):
         return self.app_name
@@ -254,14 +254,18 @@ class CreateMigrations(db.Model):
     for app_names in db_names:
         VIEW_DB_CHOICES.append(('{}'.format(app_names.engine), '{}'.format(app_names.engine)), )
 
+    ENGINE_NAMES = [('MySQL', 'MySQL'),
+                    ('Oracle', 'Oracle')]
+
 
     app_name = db.CharField(choices=VIEW_APP_CHOICES, max_length=1000)
     env_name = db.CharField(choices=VIEW_ENV_CHOICES, max_length=1000)
-    destination_db = db.CharField(choices=VIEW_DB_CHOICES, max_length=1000)
+    destination_db = db.CharField(max_length=1000)
     source_ip = db.GenericIPAddressField(default='192.168.1.2')
     source_username = db.CharField(max_length=1000)
     source_password = db.CharField(max_length=1000)
     source_db = db.CharField(max_length=1000)
+    engine_name = db.CharField(choices=ENGINE_NAMES, max_length=1000, blank=True)
 
 
 

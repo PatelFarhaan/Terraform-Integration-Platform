@@ -13,24 +13,26 @@
 
   <table>
     <tr>
-      <th>App Name</th>
-      <th>Env Name</th>
-      <th>Destination DB</th>
-      <th>Source IP</th>
-      <th>Source User</th>
-      <th>Source DB</th>
+      <th style="text-align:center">App Name</th>
+      <th style="text-align:center">Env Name</th>
+      <th style="text-align:center">Destination DB</th>
+      <th style="text-align:center">Source IP</th>
+      <th style="text-align:center">Source User</th>
+      <th style="text-align:center">Source DB</th>
+      <th style="text-align:center">Engine Name</th>
     </tr>
 
     {% for app in migrate %}
     <tr>
 
 
-      <td>{{ app.app_name }}</td>
-      <td>{{ app.env_name }}</td>
-      <td>{{ app.destination_db }}</td>
-      <td>{{ app.source_ip }}</td>
-      <td>{{ app.source_username }}</td>
-      <td>{{ app.source_db }}</td>
+      <td style="text-align:center">{{ app.app_name }}</td>
+      <td style="text-align:center">{{ app.env_name }}</td>
+      <td style="text-align:center">{{ app.destination_db }}</td>
+      <td style="text-align:center">{{ app.source_ip }}</td>
+      <td style="text-align:center">{{ app.source_username }}</td>
+      <td style="text-align:center">{{ app.source_db }}</td>
+      <td style="text-align:center">{{ app.engine_name }}</td>
       </tr>
     {% endfor %}
   </table>

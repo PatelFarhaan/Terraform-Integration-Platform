@@ -1,6 +1,55 @@
 {% extends "base.html" %}
 
 
+<p>&nbsp;</p>
+
+
+{% block javascript %}
+<script>
+  /*
+  window.onload = function() {
+    if (window.jQuery) {
+        // jQuery is loaded
+        alert("Yeah!");
+    } else {
+        // jQuery is not loaded
+        alert("Doesn't Work");
+    }
+}*/
+
+  $("#id_appname").change(function () {
+    var appname = $(this).val();
+    //alert(appname);
+
+    $.ajax({
+      url: 'ajax/getenv/',
+      data: {
+        'appname': appname
+      },
+      dataType: 'json',
+      success: function (data) {
+        $('#id_envname')
+              .find('option')
+              .remove()
+              .end()
+              .append('<option value="" selected>---</option>');
+        $.each(data, function(k,v){
+          //alert(k + "= "+ v);
+          $.each(v["fields"], function(key,val){
+            if(key == "name"){
+            $('#id_envname')
+              .append('<option value="' + val +'">'+ val + '</option>');
+              //.val('whatever');
+            }
+            //alert(key + ": " + val);
+          });
+        });
+        //alert(data);
+      }
+    });
+  });
+</script>
+{% endblock %}
 
 
 {% block content %}
@@ -23,15 +72,15 @@
 {{form.as_p}}
       <table>
         <tr>
-          <th>Select</th>
-          <th>Agent ID</th>
-          <th>Configuration ID</th>
-          <th>Host Name</th>
-          <th>OS Name</th>
-          <th>OS Version</th>
-          <th>Source</th>
-          <th>Time of Creation</th>
-          <th>Type</th>
+          <th style="text-align:center">Select</th>
+          <th style="text-align:center">Agent ID</th>
+          <th style="text-align:center">Configuration ID</th>
+          <th style="text-align:center">Host Name</th>
+          <th style="text-align:center">OS Name</th>
+          <th style="text-align:center">OS Version</th>
+          <th style="text-align:center">Source</th>
+          <th style="text-align:center">Time of Creation</th>
+          <th style="text-align:center">Type</th>
         </tr>
 
         {% for app in server %}
@@ -40,15 +89,14 @@
           <td>
             <input type="checkbox" name="serverId" value="{{ app.configurationId }}">
           </td>
-
-          <td>{{ app.agentId }}</td>
-          <td>{{ app.configurationId }}</td>
-          <td>{{ app.hostName }}</td>
-          <td>{{ app.osName }}</td>
-          <td>{{ app.osVersion }}</td>
-          <td>{{ app.source }}</td>
-          <td>{{ app.timeOfCreation }}</td>
-          <td>{{ app.type }}</td>
+          <td style="text-align:center">{{ app.agentId }}</td>
+          <td style="text-align:center">{{ app.configurationId }}</td>
+          <td style="text-align:center">{{ app.hostName }}</td>
+          <td style="text-align:center">{{ app.osName }}</td>
+          <td style="text-align:center">{{ app.osVersion }}</td>
+          <td style="text-align:center">{{ app.source }}</td>
+          <td style="text-align:center">{{ app.timeOfCreation }}</td>
+          <td style="text-align:center">{{ app.type }}</td>
 
 
         </tr>

@@ -11,20 +11,20 @@
 
 <table>
   <tr>
-    <th>Configuration ID</th>
-    <th>Description</th>
-    <th>Last Modified Date</th>
-    <th>Name</th>
-    <th>Server Count</th>
-    <th>Time of Creation</th>
-    <th>Status</th>
+    <th style="text-align:center">Configuration ID</th>
+    <th style="text-align:center">Description</th>
+    <th style="text-align:center">Last Modified Date</th>
+    <th style="text-align:center">Name</th>
+    <th style="text-align:center">Server Count</th>
+    <th style="text-align:center">Time of Creation</th>
+    <th style="text-align:center">Status</th>
   </tr>
 
   {% for apps in aws_response %}
   <tr>
 
     {% for k,v in apps.items %}
-    <td>{{ v }}</td>
+    <td style="text-align:center">{{ v }}</td>
     {% endfor %}
 
   </tr>

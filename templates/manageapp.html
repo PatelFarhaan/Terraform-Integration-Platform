@@ -4,8 +4,8 @@
 
 <p>&nbsp;</p>
 
-<a href="{% url 'aws:createapp' %}"><button class="button2">Create App</button></a>
-<a href="{% url 'aws:manageapp' %}"><button class="button2">Manage App</button></a>
+<a style="align:center" href="{% url 'aws:createapp' %}"><button class="button2">Create App</button></a>
+<a style="align:center" href="{% url 'aws:manageapp' %}"><button class="button2">Manage App</button></a>
 
 <p>&nbsp;</p>
 
@@ -16,21 +16,21 @@
 
 <table>
   <tr>
-    <th>Name</th>
-    <th>Description</th>
-    <th>Plan to Migrate</th>
-    <th>Server Names</th>
-    <th>Action</th>
+    <th style="text-align:center">Name</th>
+    <th style="text-align:center">Description</th>
+    <th style="text-align:center">Plan to Migrate</th>
+    <th style="text-align:center">Server Names</th>
+    <th style="text-align:center">Action</th>
   </tr>
 
   {% for app in apps %}
   <tr>
 
 
-    <td>{{ app.name }}</td>
-    <td>{{ app.description }}</td>
-    <td>{{ app.plan_to_migrate }}</td>
-    <td>{{ app.server_names }}</td>
+    <td style="text-align:center">{{ app.name }}</td>
+    <td style="text-align:center">{{ app.description }}</td>
+    <td style="text-align:center">{{ app.plan_to_migrate }}</td>
+    <td style="text-align:center">{{ app.server_names }}</td>
     <td>
       <form  method="POST" >
         {% csrf_token %}

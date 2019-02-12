@@ -162,6 +162,28 @@ def cicd_json(app_name, repo_name, env_name, env_id, bucket, location):
     file.close()
 
 
+def dms_json(app_name, env_name, env_id, source_ip, port, username, password, enginename, location):
+    data = {
+        "dms_appname":"{}".format(app_name),
+        "dms_envname":"{}".format(env_name),
+        "dms_envid":"{}".format(env_id),
+        "dms_src_servername":"{}".format(source_ip),
+        "dms_src_port":"{}".format(port),
+        "dms_src_username": "{}".format(username),
+        "dms_src_password": "{}".format(password),
+        "dms_src_enginename": "{}".format(enginename)
+    }
+
+    json_data = json.dumps(data)
+
+    file = open(location + '/dms.tfvars.json', 'w')
+
+    for i in json_data:
+        file.write(i)
+
+    file.close()
+
+
 def createapp(request):
 
     ServerAwsInfo.objects.all().delete()
@@ -282,12 +304,42 @@ def manageenv(request):
                                                cicd_repo_http=cicd_repo_http,
                                                cicd_repo_ssh=cicd_repo_ssh)
 
+        elif status_result == 'failure':
+
+            cicd_artifact = None
+            cicd_repo_http = None
+            cicd_repo_ssh = None
+            ec2_elb_dns = None
+            ec2_public_dns = None
+            rds_database = None
+            rds_endpoint = None
+            rds_username = None
+
+            ec2_obj = Ec2.objects.all()
+            for i in ec2_obj:
+                id1 = i.id
+            Ec2.objects.filter(id=id1).update(ec2_public_dns=ec2_public_dns,
+                                              ec2_dns=ec2_elb_dns)
+
+            rds_obj = Rds.objects.all()
+            for i in rds_obj:
+                id2 = i.id
+            Rds.objects.filter(id=id2).update(rds_database=rds_database,
+                                              rds_endpoint=rds_endpoint,
+                                              rds_json_username=rds_username)
+
+            cicd_obj = Cicd.objects.all()
+            for i in cicd_obj:
+                id3 = i.id
+            Cicd.objects.filter(id=id3).update(cicd_artifact=cicd_artifact,
+                                               cicd_repo_http=cicd_repo_http,
+                                               cicd_repo_ssh=cicd_repo_ssh)
+
         return render(request, "manageenv.html", {"ec2":ec2, "rds":rds, "cicd":cicd, "env":env_obj})
 
     else:
 
         env_obj = InfraServiceInfo.objects.order_by("-id")
-        # a refresh button on status to get the id of the element
 
     return render(request, "manageenv.html", {"env": env_obj})
 
@@ -420,6 +472,22 @@ def createmigrations(request):
         if form.is_valid():
             form.save(commit=True)
 
+            ai = AppsDescription.objects.get(name=form.data['app_name']).id
+            ei = InfraServiceInfo.objects.get(name=form.data['env_name']).id
+            en = form.data['env_name']
+
+            location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=ai,
+                                                              ei=ei,
+                                                              en=en)
+            dms_json(form.data['app_name'], en, ei, form.data['source_ip'],
+                     '3306', form.data['source_username'],
+                     form.data['source_password'], form.data['engine_name'], location)
+
+
+            os.system('echo %s|sudo -S %s' % (None, 'sh terraform-app.sh /home/ec2-user/1001/1/dev dms'))
+
+
+
         return HttpResponseRedirect(reverse('aws:managemigrations'))
 
     else:
@@ -440,5 +508,13 @@ def filter_env_names(request):
     appname = request.GET.get('appname', None)
     data = list(InfraServiceInfo.objects.filter(app_name=appname).all())
     print(data)
+    qs_json = serializers.serialize('json', data)
+    return HttpResponse(qs_json, content_type='application/json')
+
+
+def name_desc(request):
+
+    appname = request.GET.get('appname', None)
+    data = list(AppsDescription.objects.filter(name=appname).first().description)
     qs_json = serializers.serialize('json', data)
     return HttpResponse(qs_json, content_type='application/json')

@@ -31,14 +31,9 @@ def populate_Seed_data():
 
 def query():
 
-    obj = Ec2.objects.all()
-    for i in obj:
-        id = i.id
-
-
-    obj2 = Ec2.objects.filter(id=id).update(ec2_count=2, ec2_ami='kahsbd')
-
+    ans = AppsDescription.objects.get(name='first_app').id
+    print(ans)
 
 if __name__ == '__main__':
-    populate_Seed_data()
-    # query()
+    # populate_Seed_data()
+    query()
