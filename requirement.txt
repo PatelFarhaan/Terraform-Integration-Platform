@@ -1,12 +1,15 @@
 backcall==0.1.0
+bcrypt==3.1.6
 boto3==1.9.86
 botocore==1.12.86
+cffi==1.11.5
 decorator==4.3.2
 Django==2.1.5
 django-appconf==1.0.2
 django-multiselectfield==0.1.8
 django-mysql==2.4.1
 django-select2==6.3.1
+djangorestframework==3.9.1
 docutils==0.14
 ipdb==0.11
 ipython==7.2.0
@@ -18,6 +21,7 @@ pexpect==4.6.0
 pickleshare==0.7.5
 prompt-toolkit==2.0.8
 ptyprocess==0.6.0
+pycparser==2.19
 Pygments==2.3.1
 python-dateutil==2.7.5
 pytz==2018.9
