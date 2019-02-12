@@ -477,10 +477,9 @@ def createmigrations(request):
         if form.is_valid():
             form.save(commit=True)
 
-            ai = AppsDescription.objects.get(name=form.data['app_name']).id
-            ei = InfraServiceInfo.objects.get(env_name=form.data['env_name']).id
-            en = form.data['env_name']
-
+            ai = form.data['app_name']
+            ei = form.data['env_name']
+            en = InfraServiceInfo.objects.get(id=ei).env_name
             location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=ai,
                                                               ei=ei,
                                                               en=en)
