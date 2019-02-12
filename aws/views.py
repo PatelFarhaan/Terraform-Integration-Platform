@@ -305,16 +305,20 @@ def manageenv(request):
                                                cicd_repo_http=cicd_repo_http,
                                                cicd_repo_ssh=cicd_repo_ssh)
 
+
+
         if status_result == 'failed':
 
-            cicd_artifact = None
-            cicd_repo_http = None
-            cicd_repo_ssh = None
-            ec2_elb_dns = None
-            ec2_public_dns = None
-            rds_database = None
-            rds_endpoint = None
-            rds_username = None
+            InfraServiceInfo.objects.filter(id=env_id).update(output_json_status=status_result)
+
+            cicd_artifact = ''
+            cicd_repo_http = ''
+            cicd_repo_ssh = ''
+            ec2_elb_dns = ''
+            ec2_public_dns = ''
+            rds_database = ''
+            rds_endpoint = ''
+            rds_username = ''
 
             ec2_obj = Ec2.objects.all()
             for i in ec2_obj:
