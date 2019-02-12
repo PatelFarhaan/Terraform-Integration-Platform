@@ -487,8 +487,7 @@ def createmigrations(request):
                      '3306', form.data['source_username'],
                      form.data['source_password'], form.data['engine_name'], location)
 
-
-            os.system('echo %s|sudo -S %s' % (None, 'sh terraform-app.sh /home/ec2-user/1001/1/dev dms'))
+            os.system('echo %s|sudo -S %s' % (None, 'sh terraform-app.sh {} dms'.format(location)))
 
         return HttpResponseRedirect(reverse('aws:managemigrations'))
 
