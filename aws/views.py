@@ -3,9 +3,7 @@ import json
 import boto3
 from django.urls import reverse
 from django.shortcuts import render
-from django.http import HttpResponse
-from rest_framework import serializers
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from aws.forms import DashboardForm,InfraDatabase,InfraForm, InfraCicds, CreateMigrationForm
 from aws.models import StaticData, AppsDescription, ServerAwsInfo, InfraServiceInfo, Ec2, Rds, Cicd, CreateMigrations
 
@@ -186,10 +184,10 @@ def dms_json(app_name, env_name, env_id, source_ip, port, username, password, en
 
 def createapp(request):
 
-    ServerAwsInfo.objects.all().delete()
-    server_response = aws_server_list_conf()
-    for i in server_response:
-        ServerAwsInfo.objects.create(**i)
+    # ServerAwsInfo.objects.all().delete()
+    # server_response = aws_server_list_conf()
+    # for i in server_response:
+    #     ServerAwsInfo.objects.create(**i)
 
 
     form = DashboardForm()
@@ -359,23 +357,20 @@ def infraCompute(request):
         if form.is_valid():
             current_form = form.save(commit=False)
             app_name = form.data['app_name']
-            app_id = AppsDescription.objects.get(name=app_name).id
-            current_form.app_id = app_id
+            app_id = AppsDescription.objects.get(id=app_name)
+            current_form.app_id = app_name
             current_form.save()
-
 
             env_name = form.data['env_name']
             new_env_name = ''.join(env_name.split())
 
             env_id = InfraServiceInfo.objects.get(env_name=env_name).id
-
             request.session['app_name'] = app_name
-            request.session['app_id'] = app_id
+            request.session['app_id'] = app_name
             request.session['env_id'] = env_id
             request.session['env_name'] = new_env_name
             request.session['ins_type'] = form.data['instance_type']
             request.session['env_desc'] = form.data['description']
-
 
             try:
                 aws_home_folder_location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=app_id,
@@ -447,7 +442,7 @@ def infracicd(request):
             current_form = form.save(commit=False)
             current_form.app_id = request.session['app_id']
             current_form.save()
-
+            #
             location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=request.session['app_id'],
                                                              ei=request.session['env_id'],
                                                              en=request.session['env_name'])
@@ -458,7 +453,7 @@ def infracicd(request):
             os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} cicd'.format(location)))
             os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} create'.format(location)))
 
-        return HttpResponseRedirect(reverse("aws:manageenv"))
+            return HttpResponseRedirect(reverse("aws:manageenv"))
 
     else:
         form = InfraCicds()
@@ -466,9 +461,9 @@ def infracicd(request):
     return render(request, "infracicd.html", {'form':form})
 
 
+
 def createmigrations(request):
 
-    # import ipdb; ipdb.set_trace()
     form = CreateMigrationForm()
 
     if request.method == "POST":
@@ -489,7 +484,7 @@ def createmigrations(request):
 
             os.system('echo %s|sudo -S %s' % (None, 'sh terraform-app.sh {} dms'.format(location)))
 
-        return HttpResponseRedirect(reverse('aws:managemigrations'))
+            return HttpResponseRedirect(reverse('aws:managemigrations'))
 
     else:
         form = CreateMigrationForm()
@@ -544,4 +539,4 @@ def name_desc(request):
 
     appname = request.GET.get('appname', None)
     data = StaticData.objects.get(stack=appname).description
-    return HttpResponse(data[0], content_type='application/text')
+    return HttpResponse(data, content_type='application/text')
