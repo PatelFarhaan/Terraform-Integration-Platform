@@ -15,8 +15,8 @@ def populate_Seed_data():
     StaticData2.objects.all().delete()
 
 
-    stack_list = ['ami-2']
-    stack_description = ['test']
+    stack_list = 'ami'
+    stack_description = 'test'
 
     instance_type = ['t2.micro']
     engine = ['Oracle', 'MySQL']
@@ -31,8 +31,7 @@ def populate_Seed_data():
 
 def query():
 
-    ins_choice = StaticData.objects.get(stack='ami-1-test')
-    print(ins_choice.description)
+
 
 
 
