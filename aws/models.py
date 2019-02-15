@@ -1,113 +1,16 @@
-import boto3
 from django.db import models as db
 from django.db.models import CharField
 from django_mysql.models import ListCharField
 
 
-
-def aws_server_list_conf():
-    client = boto3.client('discovery', region_name='us-west-2')
-    response = client.list_configurations(
-        configurationType="SERVER",
-        filters=[]
-    )
-
-    server_id_list = list()
-
-    for i in response['configurations']:
-        server_id_list.append(i['server.configurationId'])
-
-    return server_id_list
-
-
-def aws_list_conf_api_call():
-
-    client = boto3.client('discovery', region_name='us-west-2')
-
-    aws_response = client.list_configurations(
-
-        configurationType="APPLICATION",
-        filters=[]
-
-    )
-
-    count = []
-    key_list = []
-    value_list = []
-
-    for i in aws_response['configurations']:
-        count.append(len(i))
-
-    new_dict = list()
-
-    for k, v in aws_response.items():
-        if k == 'configurations':
-            for b in range(len(count)):
-                for k1, v1 in v[b].items():
-                    key_list.append(k1[12:])
-                    value_list.append(v1)
-
-                new_dict.append(dict(zip(key_list, value_list)))
-
-    name_list = list()
-
-    for i in new_dict:
-        name_list.append(i['name'])
-
-    return name_list
-
-
-def aws_list_conf_api_call2():
-
-    client = boto3.client('discovery', region_name='us-west-2')
-
-    aws_response = client.list_configurations(
-
-        configurationType="APPLICATION",
-        filters=[]
-
-    )
-
-    count = []
-    key_list = []
-    value_list = []
-
-    for i in aws_response['configurations']:
-        count.append(len(i))
-
-    new_dict = list()
-
-    for k, v in aws_response.items():
-        if k == 'configurations':
-            for b in range(len(count)):
-                for k1, v1 in v[b].items():
-                    key_list.append(k1[12:])
-                    value_list.append(v1)
-
-                new_dict.append(dict(zip(key_list, value_list)))
-
-
-    return new_dict
-
-#######################################################################################################################
-
-
-
 class AppsDescription(db.Model):
-    # aws_response = aws_list_conf_api_call()
-    # server_response = aws_server_list_conf()
-
     SERVER_CHOICES = []
 
-    # for i in server_response:
-    #     SERVER_CHOICES.append(('{lower}'.format(lower=i), '{upper}'.format(upper=i)), )
 
     CHOICES = [("yes", "YES"),
                ("no", "NO")]
     OPTIONS = list()
 
-    # for apps in aws_response:
-    #     OPTIONS.append(('{name1}'.format(name1=apps), '{name2}'.format(name2=apps)), )
 
     name = db.CharField(max_length=256, unique=True)
     description = db.TextField()
@@ -138,7 +41,6 @@ class InfraServiceInfo(db.Model):
     AppsDescription_names = AppsDescription.objects.all()
     ins_choice = StaticData.objects.all()
     ins_choices = StaticData2.objects.all()
-    # aws_response = aws_list_conf_api_call2()
     DESC_CHOICES = list()
 
 
@@ -157,11 +59,6 @@ class InfraServiceInfo(db.Model):
     VIEW_NO_INS_CHOICES = []
     VIEW_STACK_CHOICES = []
     VIEW_INS_TYPE = []
-
-
-    # for i in aws_response:
-    #     DESC_CHOICES.append(i["description"])
-
 
     for app_names in AppsDescription_names:
         VIEW_APP_CHOICES.append(('{}'.format(app_names.name), '{}'.format(app_names.name)), )

@@ -184,12 +184,6 @@ def dms_json(app_name, env_name, env_id, source_ip, port, username, password, en
 
 def createapp(request):
 
-    # ServerAwsInfo.objects.all().delete()
-    # server_response = aws_server_list_conf()
-    # for i in server_response:
-    #     ServerAwsInfo.objects.create(**i)
-
-
     form = DashboardForm()
 
     if request.method == "POST":
@@ -348,7 +342,6 @@ def manageenv(request):
 
 def infraCompute(request):
 
-    # import ipdb; ipdb.set_trace()
     form = InfraForm()
 
     if request.method == "POST":
@@ -372,25 +365,25 @@ def infraCompute(request):
             request.session['ins_type'] = form.data['instance_type']
             request.session['env_desc'] = form.data['description']
 
-            # try:
-            #     aws_home_folder_location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=app_id,
-            #                                                                      ei=env_id,
-            #                                                                      en=new_env_name)
-            #
-            #     original_umask = os.umask(0)
-            #     os.makedirs(aws_home_folder_location, mode=0o777)
-            # finally:
-            #     os.umask(original_umask)
-            #
-            # ec2_json(form.data['instance_type'],
-            #          form.data['no_of_instance'],
-            #          form.data['stack'],
-            #          new_env_name,
-            #          app_name,
-            #          env_id,
-            #          aws_home_folder_location)
-            #
-            # os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} ec2'.format(aws_home_folder_location)))
+            try:
+                aws_home_folder_location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=app_name,
+                                                                                 ei=env_id,
+                                                                                 en=new_env_name)
+
+                original_umask = os.umask(0)
+                os.makedirs(aws_home_folder_location, mode=0o777)
+            finally:
+                os.umask(original_umask)
+
+            ec2_json(form.data['instance_type'],
+                     form.data['no_of_instance'],
+                     form.data['stack'],
+                     new_env_name,
+                     app_name,
+                     env_id,
+                     aws_home_folder_location)
+
+            os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} ec2'.format(aws_home_folder_location)))
 
             return HttpResponseRedirect(reverse("aws:infradb"))
 
@@ -410,17 +403,17 @@ def infradatabase(request):
             current_form = form.save(commit=False)
             current_form.env_id = request.session['env_id']
             current_form.save()
-            #
-            # location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=request.session['app_id'],
-            #                                                  ei=request.session['env_id'],
-            #                                                  en=request.session['env_name'])
-            # db_json(form.data['engine'], form.data['db_instance_class'],
-            #         form.data['volume_size'], form.data['username'],
-            #         form.data['password'], request.session['app_name'],
-            #         request.session['env_name'], request.session['env_id'],
-            #         location)
-            #
-            # os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} rds'.format(location)))
+
+            location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=request.session['app_id'],
+                                                             ei=request.session['env_id'],
+                                                             en=request.session['env_name'])
+            db_json(form.data['engine'], form.data['db_instance_class'],
+                    form.data['volume_size'], form.data['username'],
+                    form.data['password'], request.session['app_name'],
+                    request.session['env_name'], request.session['env_id'],
+                    location)
+
+            os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} rds'.format(location)))
 
             return HttpResponseRedirect(reverse("aws:infracicd"))
 
@@ -442,16 +435,15 @@ def infracicd(request):
             current_form = form.save(commit=False)
             current_form.app_id = request.session['app_id']
             current_form.save()
-            #
-            # location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=request.session['app_id'],
-            #                                                  ei=request.session['env_id'],
-            #                                                  en=request.session['env_name'])
-            # cicd_json(request.session['app_name'], form.data['name'],
-            #           request.session['env_name'], request.session['env_id'],
-            #           form.data['name'], location)
-            #
-            # os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} cicd'.format(location)))
-            # os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} create'.format(location)))
+            location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=request.session['app_id'],
+                                                             ei=request.session['env_id'],
+                                                             en=request.session['env_name'])
+            cicd_json(request.session['app_name'], form.data['name'],
+                      request.session['env_name'], request.session['env_id'],
+                      form.data['name'], location)
+
+            os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} cicd'.format(location)))
+            os.system('echo %s|sudo -S %s' % (None, 'sh /home/ec2-user/terraform-app.sh {} create'.format(location)))
 
             return HttpResponseRedirect(reverse("aws:manageenv"))
 
@@ -475,14 +467,14 @@ def createmigrations(request):
             ai = form.data['app_name']
             ei = form.data['env_name']
             en = InfraServiceInfo.objects.get(id=ei).env_name
-            # location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=ai,
-            #                                                   ei=ei,
-            #                                                   en=en)
-            # dms_json(form.data['app_name'], en, ei, form.data['source_ip'],
-            #          '3306', form.data['source_username'],
-            #          form.data['source_password'], form.data['engine_name'], location)
-            #
-            # os.system('echo %s|sudo -S %s' % (None, 'sh terraform-app.sh {} dms'.format(location)))
+            location = '/home/ec2-user/{ai}/{ei}/{en}'.format(ai=ai,
+                                                              ei=ei,
+                                                              en=en)
+            dms_json(form.data['app_name'], en, ei, form.data['source_ip'],
+                     '3306', form.data['source_username'],
+                     form.data['source_password'], form.data['engine_name'], location)
+
+            os.system('echo %s|sudo -S %s' % (None, 'sh terraform-app.sh {} dms'.format(location)))
             return HttpResponseRedirect(reverse('aws:managemigrations'))
 
     else:
